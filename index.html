@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE 25th CHAMBER // ULTIMATE CHALLENGE</title>
+    <title>THE 25th CHAMBER // HARDCORE</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
 
@@ -75,7 +75,7 @@
         }
 
         .terminal {
-            width: 480px;
+            width: 500px;
             background: #000;
             border: 1px solid #1a1a1a;
             border-radius: 12px;
@@ -106,7 +106,7 @@
         }
 
         .clue-container {
-            min-height: 100px;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -116,8 +116,8 @@
         }
 
         .clue-text {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
             color: #fff;
             word-break: break-all;
         }
@@ -197,10 +197,7 @@
 
         .correct-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.92);
             border-radius: 12px;
             display: flex;
@@ -217,27 +214,13 @@
             pointer-events: all;
         }
 
-        .checkmark-svg {
-            width: 80px;
-            height: 80px;
-        }
-
+        .checkmark-svg { width: 80px; height: 80px; }
         .checkmark-circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke: #fff;
-            stroke-width: 2;
-            fill: none;
+            stroke-dasharray: 166; stroke-dashoffset: 166; stroke: #fff; stroke-width: 2; fill: none;
             animation: strokeCircle 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
         }
-
         .checkmark-check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            stroke: #fff;
-            stroke-width: 3;
-            fill: none;
+            transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; stroke: #fff; stroke-width: 3; fill: none;
             animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
         }
 
@@ -245,32 +228,15 @@
         @keyframes strokeCheck { 100% { stroke-dashoffset: 0; } }
 
         .morse-beacon {
-            position: fixed;
-            top: 24px;
-            left: 24px;
-            width: 6px;
-            height: 6px;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.05s ease;
+            position: fixed; top: 24px; left: 24px; width: 6px; height: 6px;
+            background: #fff; border-radius: 50%; opacity: 0; transition: opacity 0.05s ease;
         }
 
         .drawer {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: 320px;
-            background: #080808;
-            border-left: 1px solid #1f1f1f;
-            border-right: 1px solid #1f1f1f;
-            padding: 25px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.8);
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: fixed; top: 0; bottom: 0; width: 320px;
+            background: #080808; border-left: 1px solid #1f1f1f; border-right: 1px solid #1f1f1f;
+            padding: 25px; box-shadow: 0 0 40px rgba(0,0,0,0.8); z-index: 90;
+            display: flex; flex-direction: column; gap: 15px; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         #decryptor-drawer { right: 0; transform: translateX(100%); }
@@ -283,193 +249,73 @@
         #leaderboard-drawer.open { transform: translateX(0); }
 
         .drawer-title {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            color: #666;
-            text-transform: uppercase;
-            border-bottom: 1px solid #1a1a1a;
-            padding-bottom: 10px;
+            font-size: 0.75rem; letter-spacing: 2px; color: #666;
+            text-transform: uppercase; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px;
         }
 
-        .decoder-input, .decoder-select {
-            font-size: 0.75rem;
-            padding: 10px;
-            text-align: left;
-            text-transform: none;
-        }
-
+        .decoder-input, .decoder-select { font-size: 0.75rem; padding: 10px; text-align: left; text-transform: none; }
         .decoder-output {
-            background: #000;
-            border: 1px solid #1a1a1a;
-            border-radius: 6px;
-            padding: 12px;
-            font-size: 0.75rem;
-            color: #00ff66;
-            min-height: 80px;
-            word-break: break-all;
+            background: #000; border: 1px solid #1a1a1a; border-radius: 6px;
+            padding: 12px; font-size: 0.75rem; color: #00ff66; min-height: 80px; word-break: break-all;
         }
 
         .console-logs {
-            flex: 1;
-            background: #000;
-            border: 1px solid #1a1a1a;
-            border-radius: 6px;
-            padding: 10px;
-            font-size: 0.7rem;
-            color: #aaa;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            flex: 1; background: #000; border: 1px solid #1a1a1a; border-radius: 6px;
+            padding: 10px; font-size: 0.7rem; color: #aaa; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;
         }
 
-        .console-line {
-            line-height: 1.4;
-            opacity: 0;
-            animation: fadeInLine 0.2s forwards;
-        }
-
+        .console-line { line-height: 1.4; opacity: 0; animation: fadeInLine 0.2s forwards; }
         @keyframes fadeInLine { to { opacity: 1; } }
 
         #start-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000;
-            z-index: 300;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 300; display: flex; justify-content: center; align-items: center;
         }
 
         .modal-box {
-            width: 380px;
-            background: #050505;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
+            width: 380px; background: #050505; border: 1px solid #222; border-radius: 12px; padding: 30px; text-align: center;
         }
 
         #completion-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #fff;
-            color: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 1.2s ease;
-            z-index: 200;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #fff; color: #000; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 1.2s ease; z-index: 200;
         }
 
-        #completion-screen.active {
-            opacity: 1;
-            pointer-events: all;
-        }
+        #completion-screen.active { opacity: 1; pointer-events: all; }
+        #completion-screen h1 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 10px; }
 
-        #completion-screen h1 {
-            font-size: 2.5rem;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-        }
-
+        /* Scrabble Level UI */
         .scrabble-board {
-            display: grid;
-            grid-template-columns: repeat(4, 45px);
-            gap: 8px;
-            margin: 10px auto;
+            display: grid; grid-template-columns: repeat(4, 45px); gap: 8px; margin: 15px auto 5px auto;
         }
-
         .scrabble-tile {
-            width: 45px;
-            height: 45px;
-            background: #e6c280;
-            color: #000;
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            box-shadow: 0 4px 0 #b38f4d;
-            user-select: none;
-            position: relative;
+            width: 45px; height: 45px; background: #d4a76a; color: #000; font-weight: 800; font-size: 1.1rem;
+            display: flex; justify-content: center; align-items: center; border-radius: 4px; box-shadow: 0 4px 0 #9c753c;
+            user-select: none; position: relative; transition: all 0.15s ease;
         }
+        .scrabble-tile .sub { position: absolute; bottom: 2px; right: 4px; font-size: 0.55rem; }
+        .scrabble-tile.selected { border: 2px solid #fff; box-shadow: 0 0 12px #fff; transform: translateY(-3px); background: #fff; }
 
-        .scrabble-tile .sub {
-            position: absolute;
-            bottom: 2px;
-            right: 4px;
-            font-size: 0.5rem;
+        /* Color Level UI */
+        .color-mix-container { display: flex; gap: 12px; margin: 15px auto; align-items: center; }
+        .color-swatch {
+            width: 40px; height: 40px; border-radius: 50%; border: 2px solid #333; transition: all 0.2s ease;
         }
+        .color-swatch.active { border-color: #fff; box-shadow: 0 0 10px currentColor; }
 
-        .scrabble-tile.selected {
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px #fff;
-            transform: translateY(-2px);
-        }
-
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 40px);
-            gap: 10px;
-            margin: 15px auto;
-        }
-
-        .color-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #333;
-        }
-
-        .pipeline-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        /* Pipeline Nodes UI */
+        .pipeline-container { display: flex; gap: 8px; margin-top: 15px; }
         .pipe-node {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #444;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            padding: 8px 12px; background: #0a0a0a; border: 1px solid #222; border-radius: 6px; font-size: 0.75rem; color: #888;
         }
 
-        .constellation-svg {
-            width: 180px;
-            height: 120px;
-            background: #050505;
-            border: 1px solid #1a1a1a;
-            border-radius: 8px;
-        }
+        /* SVG Illusion UI */
+        .illusion-svg { width: 140px; height: 140px; margin-top: 10px; }
 
-        .leaderboard-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 0.8rem;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #1a1a1a;
-            padding-bottom: 5px;
-        }
-
-        .leaderboard-item span:last-child {
-            color: #00ff66;
-        }
+        .leaderboard-list { list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem; }
+        .leaderboard-item { display: flex; justify-content: space-between; border-bottom: 1px solid #1a1a1a; padding-bottom: 5px; }
+        .leaderboard-item span:last-child { color: #00ff66; }
     </style>
 </head>
 <body>
@@ -561,6 +407,7 @@
         let playerName = "";
         let startTime = 0;
         let selectedScrabbleLetters = [];
+        let activeColors = [];
 
         const defaultLeaderboard = [
             { name: "CIPHER_GOD", time: 145 },
@@ -631,11 +478,11 @@
             { id: 18, ans: "SILENT", clue: "Rearrange Anagram Tiles:", ghost: "L I S T E N", visual: "none" },
             { id: 19, ans: "VECTOR", clue: "Hexadecimal Array Conversion:", ghost: "56 45 43 54 4F 52", visual: "none" },
             { id: 20, ans: "CHAMBER", clue: "Final Master Key:", ghost: "Reverse: REBMAHC", visual: "none" },
-            { id: 21, ans: "MATRIX", clue: "Select letters on the interactive Scrabble board to spell highest point word:", ghost: "", visual: "scrabble" },
-            { id: 22, ans: "RGB", clue: "Click primary light mixing sequence (Red, Green, Blue):", ghost: "", visual: "colors" },
-            { id: 23, ans: "CYGNUS", clue: "Trace the constellation shape sequence:", ghost: "NNE -> E -> SE", visual: "constellation" },
-            { id: 24, ans: "FLOW", clue: "Direct the signal flow through the nodes:", ghost: "A -> B -> C -> D", visual: "pipeline" },
-            { id: 25, ans: "PARADOX", clue: "Visual Optical Illusion Pattern:", ghost: "Count inner vertices of impossible triangle x 3", visual: "illusion" }
+            { id: 21, ans: "SPECTRUM", clue: "Rearrange scrambled tiles into the single highest-scoring valid 8-letter Scrabble word:", ghost: "Max score total: 16 points", visual: "scrabble" },
+            { id: 22, ans: "WHITE", clue: "Combine the 3 additive primary color hex wavelengths (#FF0000 + #00FF00 + #0000FF):", ghost: "Additive Light Synthesis Model", visual: "colors" },
+            { id: 23, ans: "SQUARE", clue: "Plot star vertices in order (3,1) -> (1,3) -> (1,1) -> (3,3). Identify geometric form:", ghost: "Coordinate Quadrant Map", visual: "constellation" },
+            { id: 24, ans: "FLAG", clue: "Re-order out-of-sync packet nodes by index key [N1->N4] and decode Hex bytes:", ghost: "Packets: [N4:6E] [N1:4C] [N3:4F] [N2:41]", visual: "pipeline" },
+            { id: 25, ans: "PENROSE", clue: "Name the creator of this impossible geometric triangle visual:", ghost: "3-Bar Escher Tribar Paradox", visual: "illusion" }
         ];
 
         let currentStage = 0;
@@ -695,15 +542,16 @@
             passInput.value = "";
             visualArea.innerHTML = "";
             selectedScrabbleLetters = [];
+            activeColors = [];
 
             if (stage.visual === "scrabble") {
                 const board = document.createElement("div");
                 board.className = "scrabble-board";
-                const letters = [
-                    {l:'M',p:3},{l:'A',p:1},{l:'T',p:1},{l:'R',p:1},
-                    {l:'I',p:1},{l:'X',p:8},{l:'E',p:1},{l:'S',p:1}
+                const tilesData = [
+                    {l:'S',p:1},{l:'A',p:1},{l:'P',p:3},{l:'C',p:3},
+                    {l:'R',p:1},{l:'M',p:3},{l:'U',p:1},{l:'T',p:1}
                 ];
-                letters.forEach(item => {
+                tilesData.forEach((item, idx) => {
                     const tile = document.createElement("div");
                     tile.className = "scrabble-tile";
                     tile.innerHTML = `${item.l}<span class="sub">${item.p}</span>`;
@@ -712,7 +560,8 @@
                         if (tile.classList.contains("selected")) {
                             selectedScrabbleLetters.push(item.l);
                         } else {
-                            selectedScrabbleLetters = selectedScrabbleLetters.filter(x => x !== item.l);
+                            const removeIdx = selectedScrabbleLetters.indexOf(item.l);
+                            if (removeIdx > -1) selectedScrabbleLetters.splice(removeIdx, 1);
                         }
                         passInput.value = selectedScrabbleLetters.join("");
                     };
@@ -720,50 +569,60 @@
                 });
                 visualArea.appendChild(board);
             } else if (stage.visual === "colors") {
-                const grid = document.createElement("div");
-                grid.className = "color-grid";
-                const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"];
-                const names = ["R", "G", "B", "Y", "P", "C"];
-                colors.forEach((c, idx) => {
-                    const btn = document.createElement("div");
-                    btn.className = "color-btn";
-                    btn.style.background = c;
-                    btn.onclick = () => {
-                        passInput.value += names[idx];
+                const container = document.createElement("div");
+                container.className = "color-mix-container";
+                const swatches = [
+                    { name: "RED", hex: "#ff0000" },
+                    { name: "GREEN", hex: "#00ff00" },
+                    { name: "BLUE", hex: "#0000ff" }
+                ];
+                swatches.forEach(sw => {
+                    const el = document.createElement("div");
+                    el.className = "color-swatch";
+                    el.style.background = sw.hex;
+                    el.style.color = sw.hex;
+                    el.onclick = () => {
+                        el.classList.toggle("active");
+                        if (el.classList.contains("active")) activeColors.push(sw.name);
+                        else activeColors = activeColors.filter(c => c !== sw.name);
                     };
-                    grid.appendChild(btn);
+                    container.appendChild(el);
                 });
-                visualArea.appendChild(grid);
+                visualArea.appendChild(container);
             } else if (stage.visual === "constellation") {
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.setAttribute("class", "constellation-svg");
+                svg.setAttribute("viewBox", "0 0 100 100");
+                svg.setAttribute("style", "width:120px; height:120px; background:#050505; border:1px solid #1a1a1a; border-radius:8px; margin-top:10px;");
                 svg.innerHTML = `
-                    <circle cx="30" cy="60" r="4" fill="#fff"/>
-                    <circle cx="70" cy="30" r="4" fill="#fff"/>
-                    <circle cx="110" cy="30" r="4" fill="#fff"/>
-                    <circle cx="150" cy="70" r="4" fill="#fff"/>
-                    <line x1="30" y1="60" x2="70" y2="30" stroke="#555" stroke-width="2"/>
-                    <line x1="70" y1="30" x2="110" y2="30" stroke="#555" stroke-width="2"/>
-                    <line x1="110" y1="30" x2="150" y2="70" stroke="#555" stroke-width="2"/>
+                    <circle cx="75" cy="25" r="3" fill="#fff"/>
+                    <circle cx="25" cy="75" r="3" fill="#fff"/>
+                    <circle cx="25" cy="25" r="3" fill="#fff"/>
+                    <circle cx="75" cy="75" r="3" fill="#fff"/>
+                    <path d="M 75 25 L 25 75 L 25 25 L 75 75 Z" stroke="#333" stroke-width="1.5" fill="none" stroke-dasharray="3,3"/>
                 `;
                 visualArea.appendChild(svg);
             } else if (stage.visual === "pipeline") {
                 const pipe = document.createElement("div");
                 pipe.className = "pipeline-container";
-                ["F", "L", "O", "W"].forEach(char => {
+                ["[N4:6E]", "[N1:4C]", "[N3:4F]", "[N2:41]"].forEach(txt => {
                     const node = document.createElement("div");
                     node.className = "pipe-node";
-                    node.innerText = char;
+                    node.innerText = txt;
                     pipe.appendChild(node);
                 });
                 visualArea.appendChild(pipe);
             } else if (stage.visual === "illusion") {
-                const div = document.createElement("div");
-                div.style.marginTop = "10px";
-                div.style.fontSize = "0.8rem";
-                div.style.color = "#888";
-                div.innerText = "▲ (3 vertices x 2 sides = 6, 6 x 3 = ? -> PARADOX)";
-                visualArea.appendChild(div);
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("class", "illusion-svg");
+                svg.setAttribute("viewBox", "0 0 100 100");
+                svg.innerHTML = `
+                    <polygon points="50,15 90,85 10,85" stroke="#fff" stroke-width="2" fill="none" />
+                    <polygon points="50,30 75,75 25,75" stroke="#555" stroke-width="1.5" fill="none" />
+                    <line x1="50" y1="15" x2="50" y2="30" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="90" y1="85" x2="75" y2="75" stroke="#fff" stroke-width="1.5"/>
+                    <line x1="10" y1="85" x2="25" y2="75" stroke="#fff" stroke-width="1.5"/>
+                `;
+                visualArea.appendChild(svg);
             }
 
             logToConsole(`Loaded Stage ${stage.id}.`);
