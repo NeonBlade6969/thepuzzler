@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE 15th CHAMBER</title>
+    <title>THE 20th CHAMBER // ULTIMATE CHALLENGE</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
 
@@ -25,17 +25,47 @@
             overflow: hidden;
         }
 
-        /* Subtle ambient glow */
+        /* Subtle Ambient Glow */
         .ambient-glow {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 70%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
         }
 
+        /* Top Action Bar */
+        .top-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .tool-btn {
+            background: #111;
+            color: #888;
+            border: 1px solid #222;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tool-btn:hover {
+            background: #222;
+            color: #fff;
+            border-color: #444;
+        }
+
+        /* Main Terminal Card */
         .terminal {
-            width: 440px;
+            width: 460px;
             background: #000;
             border: 1px solid #1a1a1a;
             border-radius: 12px;
@@ -54,18 +84,18 @@
             font-size: 0.7rem;
             letter-spacing: 2px;
             color: #444;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             text-transform: uppercase;
             border-bottom: 1px solid #111;
             padding-bottom: 12px;
         }
 
         .level-indicator {
-            color: #888;
+            color: #fff;
             font-weight: 700;
         }
 
-        /* Clue Area */
+        /* Clue Box Area */
         .clue-container {
             min-height: 80px;
             display: flex;
@@ -82,12 +112,13 @@
             word-break: break-all;
         }
 
-        /* Invisible text trick */
+        /* Invisible text highlight mechanics */
         .ghost-clue {
             color: #000;
             font-size: 0.75rem;
             letter-spacing: 2px;
             user-select: text;
+            margin-top: 8px;
             transition: color 0.3s ease;
         }
 
@@ -96,14 +127,14 @@
             color: #000;
         }
 
-        /* Input Controls */
+        /* Input Group & Verification Button */
         .input-group {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        input[type="text"] {
+        input[type="text"], select {
             width: 100%;
             background: #050505;
             border: 1px solid #1c1c1c;
@@ -124,7 +155,7 @@
             background: #0a0a0a;
         }
 
-        button {
+        button.submit-btn {
             width: 100%;
             background: #fff;
             color: #000;
@@ -140,15 +171,15 @@
             transition: transform 0.2s, background 0.2s;
         }
 
-        button:hover {
+        button.submit-btn:hover {
             background: #e6e6e6;
             transform: translateY(-1px);
         }
 
-        /* Shake Animation on Wrong Answer */
+        /* Shake animation on incorrect submission */
         .shake {
             animation: shakeAnim 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-            border-color: #444 !important;
+            border-color: #555 !important;
         }
 
         @keyframes shakeAnim {
@@ -158,7 +189,62 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Morse Beacon Dot (Top-Left) */
+        /* Correct Answer Overlay Checkmark SVG Drawing Animation */
+        .correct-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 20;
+        }
+
+        .correct-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .checkmark-svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .checkmark-circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke: #fff;
+            stroke-width: 2;
+            fill: none;
+            animation: strokeCircle 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            stroke: #fff;
+            stroke-width: 3;
+            fill: none;
+            animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
+        }
+
+        @keyframes strokeCircle {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        @keyframes strokeCheck {
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* Morse Beacon Light Indicator */
         .morse-beacon {
             position: fixed;
             top: 24px;
@@ -171,7 +257,95 @@
             transition: opacity 0.05s ease;
         }
 
-        /* Completion Screen */
+        /* Slide-Out Decryptor Drawer & Side Console */
+        .drawer {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            background: #080808;
+            border-left: 1px solid #1f1f1f;
+            border-right: 1px solid #1f1f1f;
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #decryptor-drawer {
+            right: 0;
+            transform: translateX(100%);
+        }
+
+        #decryptor-drawer.open {
+            transform: translateX(0);
+        }
+
+        #console-drawer {
+            left: 0;
+            transform: translateX(-100%);
+        }
+
+        #console-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-title {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: #666;
+            text-transform: uppercase;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 10px;
+        }
+
+        .decoder-input, .decoder-select {
+            font-size: 0.75rem;
+            padding: 10px;
+            text-align: left;
+            text-transform: none;
+        }
+
+        .decoder-output {
+            background: #000;
+            border: 1px solid #1a1a1a;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.75rem;
+            color: #00ff66;
+            min-height: 80px;
+            word-break: break-all;
+        }
+
+        /* Console Log Drawer Container */
+        .console-logs {
+            flex: 1;
+            background: #000;
+            border: 1px solid #1a1a1a;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.7rem;
+            color: #aaa;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .console-line {
+            line-height: 1.4;
+            opacity: 0;
+            animation: fadeInLine 0.2s forwards;
+        }
+
+        @keyframes fadeInLine {
+            to { opacity: 1; }
+        }
+
+        /* Completion Reward Screen */
         #completion-screen {
             position: fixed;
             top: 0;
@@ -187,7 +361,7 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 1.2s ease;
-            z-index: 100;
+            z-index: 200;
         }
 
         #completion-screen.active {
@@ -216,52 +390,92 @@
     <div class="ambient-glow"></div>
     <div class="morse-beacon" id="beacon"></div>
 
-    <!-- Hidden DOM Attribute for Level 2 -->
-    <div class="terminal" id="terminal" data-hash="S0VZQk9BUkQ=">
+    <!-- Top Action Toolbar -->
+    <div class="top-bar">
+        <button class="tool-btn" onclick="toggleConsole()">Console Log</button>
+        <button class="tool-btn" onclick="toggleDecryptor()">Decryptor Tool</button>
+    </div>
+
+    <!-- Main Game Window -->
+    <div class="terminal" id="terminal" data-key="S0VZQk9BUkQ=">
         <div class="terminal-header">
-            <span>SECURITY_LEVEL</span>
-            <span class="level-indicator" id="level-num">STAGE 01 / 15</span>
+            <span>CHAMBER_SYSTEM</span>
+            <span class="level-indicator" id="level-num">STAGE 01 / 20</span>
         </div>
 
         <div class="clue-container">
-            <div class="clue-text" id="clue-display">Observe the light in the top-left...</div>
+            <div class="clue-text" id="clue-display">Observe the light beacon timing...</div>
             <div class="ghost-clue" id="ghost-display"></div>
         </div>
 
         <div class="input-group">
-            <input type="text" id="pass-input" placeholder="ENTER KEY" autocomplete="off" maxlength="12">
-            <button onclick="submitKey()">AUTHENTICATE</button>
+            <input type="text" id="pass-input" placeholder="ENTER KEY" autocomplete="off" maxlength="20">
+            <button class="submit-btn" onclick="submitKey()">AUTHENTICATE</button>
+        </div>
+
+        <!-- Correct Checkmark Drawn Animation Overlay -->
+        <div class="correct-overlay" id="correct-overlay">
+            <svg class="checkmark-svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25"/>
+                <path class="checkmark-check" d="M14 27 l7 7 l17 -17"/>
+            </svg>
         </div>
     </div>
 
-    <!-- Level 8 Hidden Comment Clue -->
-    <!-- Level 8 Clue: ==gSDFVT -->
+    <!-- Built-in Decryptor Drawer -->
+    <div class="drawer" id="decryptor-drawer">
+        <div class="drawer-title">Built-In Decryptor Tool</div>
+        <select class="decoder-select" id="cipher-type" onchange="runDecryptor()">
+            <option value="binary">Binary to Text</option>
+            <option value="b64dec">Base64 Decode</option>
+            <option value="b64enc">Base64 Encode</option>
+            <option value="hex">Hex to Text</option>
+            <option value="ascii">ASCII Codes to Text</option>
+            <option value="reverse">Reverse String</option>
+            <option value="caesar">Caesar Shift (-1)</option>
+            <option value="scrabble">Scrabble Score Calculator</option>
+        </select>
+        <input type="text" class="decoder-input" id="decoder-src" placeholder="Type cipher string..." oninput="runDecryptor()" autocomplete="off">
+        <div class="drawer-title">Decrypted Result</div>
+        <div class="decoder-output" id="decoder-out">---</div>
+    </div>
 
-    <!-- Victory Screen -->
+    <!-- Side Console Window -->
+    <div class="drawer" id="console-drawer">
+        <div class="drawer-title">System Console</div>
+        <div class="console-logs" id="console-logs"></div>
+    </div>
+
+    <!-- Challenge Completion Screen -->
     <div id="completion-screen">
-        <h1>CHALLENGE CLEARED</h1>
-        <p>You have overcome all 15 security locks.</p>
-        <a href="https://promos.discord.gg/Fv3yb6ZAYYqyhwRxKHXEXZ3m" target="_blank">CLAIM REWARD</a>
+        <h1>ALL CHAMBERS CLEARED</h1>
+        <p>You have successfully unlocked all 20 levels.</p>
+        <a href="https://promos.discord.gg/Fv3yb6ZAYYqyhwRxKHXEXZ3m" target="_blank">CLAIM REWARD LINK</a>
     </div>
 
     <script>
-        // --- 15 STAGE DATA ENGINE ---
+        // 20 LEVEL PUZZLE DATA PIPELINE
         const STAGES = [
             { id: 1,  ans: "ROD",      clue: "Observe the light beacon timing.", ghost: "" },
-            { id: 2,  ans: "KEYBOARD", clue: "Inspect the terminal properties.", ghost: "" },
-            { id: 3,  ans: "CANCER",   clue: "Look into the empty space.", ghost: "Shift -2: EQPEI" },
-            { id: 4,  ans: "@AT",      clue: "Check the window title bar.", ghost: "" },
-            { id: 5,  ans: "9",         clue: "Calculate standard tile points.", ghost: "K - I - N - G" },
+            { id: 2,  ans: "KEYBOARD", clue: "Check the terminal's DOM attributes.", ghost: "" },
+            { id: 3,  ans: "CANCER",   clue: "Look closely into the empty space.", ghost: "Shift -2: EQPEI" },
+            { id: 4,  ans: "@AT",      clue: "Check the active window title bar.", ghost: "" },
+            { id: 5,  ans: "9",         clue: "Calculate total Scrabble tile points.", ghost: "K - I - N - G" },
             { id: 6,  ans: "5",         clue: "Inspect the URL hash parameter.", ghost: "" },
-            { id: 7,  ans: "T3A3",     clue: "Atbash Inversion:", ghost: "G3Z3" },
-            { id: 8,  ans: "MINT",     clue: "Inspect raw source comments.", ghost: "" },
-            { id: 9,  ans: "77",       clue: "Open the Browser Developer Console.", ghost: "" },
-            { id: 10, ans: "TREI",     clue: "ASCII Decimal Array:", ghost: "74 72 65 105" },
-            { id: 11, ans: "ASDFGH",   clue: "QWERTY row offset (+1 down):", ghost: "QWERTY" },
-            { id: 12, ans: "48",       clue: "Evaluate matrix equation:", ghost: "X = (15 * 4) - 12" },
+            { id: 7,  ans: "T3A3",     clue: "Atbash Alphabet Inversion:", ghost: "G3Z3" },
+            { id: 8,  ans: "MINT",     clue: "Use the Decryptor: Reverse + Base64.", ghost: "==gSDFVT" },
+            { id: 9,  ans: "77",       clue: "Read the System Console Logs.", ghost: "" },
+            { id: 10, ans: "TREI",     clue: "Convert ASCII Decimals:", ghost: "74 72 65 105" },
+            { id: 11, ans: "ASDFGH",   clue: "Shift QWERTY row offset down by 1:", ghost: "QWERTY" },
+            { id: 12, ans: "48",       clue: "Solve the mathematical equation:", ghost: "X = (15 * 4) - 12" },
             { id: 13, ans: "ATTACK",   clue: "Vigenère Cipher (Key: LEMON):", ghost: "LXFOPVE" },
-            { id: 14, ans: "AAAA",     clue: "Audio Frequencies (Hz):", ghost: "440Hz, 880Hz, 220Hz" },
-            { id: 15, ans: "DISCORD",  clue: "Master Password Verification:", ghost: "Key: Discord Promo Target" }
+            { id: 14, ans: "AAAA",     clue: "Audio Note Frequencies (Hz):", ghost: "440Hz, 880Hz, 220Hz" },
+            { id: 15, ans: "DISCORD",  clue: "Master Target Cipher:", ghost: "Vigenère key: TARGET" },
+            { id: 16, ans: "10110",    clue: "Decimal 22 to 5-bit Binary:", ghost: "Base-10: 22" },
+            { id: 17, ans: "CIPHER",   clue: "Caesar Shift (-3):", ghost: "FLSKHU" },
+            { id: 18, ans: "SILENT",   clue: "Rearrange Anagram Tiles:", ghost: "L I S T E N" },
+            { id: 19, ans: "VECTOR",   clue: "Hexadecimal Array Conversion:", ghost: "56 45 43 54 4F 52" },
+            { id: 20, ans: "CHAMBER",  clue: "Final Master Key:", ghost: "Reverse: REBMAHC" }
         ];
 
         let currentStage = 0;
@@ -272,17 +486,29 @@
         const levelNum = document.getElementById("level-num");
         const passInput = document.getElementById("pass-input");
         const terminal = document.getElementById("terminal");
+        const overlay = document.getElementById("correct-overlay");
+        const consoleLogs = document.getElementById("console-logs");
 
-        // --- ACCURATE MORSE TIMING BEACON SYSTEM ---
-        // Dot (.) = 200ms, Dash (-) = 600ms, Gap = 200ms
-        // Stage 1 Sequence: R (.-.) O (---) D (-..)
+        // System Console Logger Function
+        function logToConsole(msg) {
+            const line = document.createElement("div");
+            line.className = "console-line";
+            line.innerText = `> ${msg}`;
+            consoleLogs.appendChild(line);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
+        }
+
+        logToConsole("SYSTEM INIT: 20 Chambers Online.");
+        logToConsole("Level 9 Hint: Sum of prime numbers between 1 and 20.");
+
+        // Morse Code Timing Light System (Stage 1)
         const morsePattern = [
             200, 200, 600, 200, 200, 600, // R: . - .
             600, 200, 600, 200, 600, 600, // O: - - -
             600, 200, 200, 200, 200, 2000 // D: - . .
         ];
-        
         let morseIdx = 0;
+
         function runMorseBeacon() {
             if (currentStage === 0) {
                 const isPulse = morseIdx % 2 === 0;
@@ -296,53 +522,105 @@
         }
         runMorseBeacon();
 
-        // Stage 4 Title Updates
+        // Stage 4 Window Title Bar Updates
         setInterval(() => {
             if (currentStage === 3) {
                 document.title = "[40 41 54]";
             } else {
-                document.title = "THE 15th CHAMBER";
+                document.title = "THE 20th CHAMBER";
             }
         }, 1000);
 
         // Stage 6 URL Hash Setter
         window.location.hash = "0101";
 
-        // Stage 9 Console Message
-        console.log("%c[SECURITY PROTOCOL LOG]", "color: #fff; font-weight: bold;");
-        console.log("Level 9 Clue: Sum of all prime numbers between 1 and 20.");
-
         function renderStage() {
             const stage = STAGES[currentStage];
-            levelNum.innerText = `STAGE ${stage.id.toString().padStart(2, '0')} / 15`;
+            levelNum.innerText = `STAGE ${stage.id.toString().padStart(2, '0')} / 20`;
             clueDisplay.innerText = stage.clue;
             ghostDisplay.innerText = stage.ghost;
             passInput.value = "";
+            logToConsole(`Loaded Stage ${stage.id}.`);
         }
 
+        // Verification & Animated Checkmark Trigger
         function submitKey() {
             const userInput = passInput.value.trim().toUpperCase();
             const correctKey = STAGES[currentStage].ans.toUpperCase();
 
             if (userInput === correctKey) {
-                currentStage++;
-                if (currentStage >= STAGES.length) {
-                    document.getElementById("completion-screen").classList.add("active");
-                } else {
-                    renderStage();
-                }
+                // Trigger Drawn Checkmark Animation Overlay
+                overlay.classList.add("active");
+                
+                setTimeout(() => {
+                    overlay.classList.remove("active");
+                    currentStage++;
+                    if (currentStage >= STAGES.length) {
+                        document.getElementById("completion-screen").classList.add("active");
+                    } else {
+                        renderStage();
+                    }
+                }, 800);
             } else {
                 terminal.classList.add("shake");
                 setTimeout(() => terminal.classList.remove("shake"), 400);
+                logToConsole(`AUTHENTICATION FAILED: Input '${userInput}' invalid.`);
             }
         }
 
-        // Allow pressing 'Enter' to submit
+        // Drawer Toggle Handlers
+        function toggleDecryptor() {
+            document.getElementById("decryptor-drawer").classList.toggle("open");
+        }
+
+        function toggleConsole() {
+            document.getElementById("console-drawer").classList.toggle("open");
+        }
+
+        // Built-In Decryptor Logic Engine
+        function runDecryptor() {
+            const type = document.getElementById("cipher-type").value;
+            const src = document.getElementById("decoder-src").value.trim();
+            const out = document.getElementById("decoder-out");
+
+            if (!src) {
+                out.innerText = "---";
+                return;
+            }
+
+            try {
+                if (type === "binary") {
+                    out.innerText = src.split(" ").map(bin => String.fromCharCode(parseInt(bin, 2))).join("");
+                } else if (type === "b64dec") {
+                    out.innerText = atob(src);
+                } else if (type === "b64enc") {
+                    out.innerText = btoa(src);
+                } else if (type === "hex") {
+                    out.innerText = src.split(" ").map(h => String.fromCharCode(parseInt(h, 16))).join("");
+                } else if (type === "ascii") {
+                    out.innerText = src.split(" ").map(code => String.fromCharCode(parseInt(code, 10))).join("");
+                } else if (type === "reverse") {
+                    out.innerText = src.split("").reverse().join("");
+                } else if (type === "caesar") {
+                    out.innerText = src.replace(/[a-zA-Z]/g, c => String.fromCharCode((c.charCodeAt(0) - 1)));
+                } else if (type === "scrabble") {
+                    const scores = {A:1,B:3,C:3,D:2,E:1,F:4,G:2,H:4,I:1,J:8,K:5,L:1,M:3,N:1,O:1,P:3,Q:10,R:1,S:1,T:1,U:1,V:4,W:4,X:8,Y:4,Z:10};
+                    let total = 0;
+                    for (let char of src.toUpperCase().replace(/[^A-Z]/g, "")) {
+                        total += (scores[char] || 0);
+                    }
+                    out.innerText = `Score: ${total}`;
+                }
+            } catch (err) {
+                out.innerText = "Error: Invalid Input Format";
+            }
+        }
+
         passInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") submitKey();
         });
 
-        // Initialize Stage 1
+        // Initialize First Level
         renderStage();
     </script>
 </body>
