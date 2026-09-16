@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>///</title>
+    <title>THE 15th CHAMBER</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
 
         * {
             box-sizing: border-box;
@@ -25,47 +25,85 @@
             overflow: hidden;
         }
 
-        .chamber {
-            width: 420px;
-            padding: 40px;
+        /* Subtle ambient glow */
+        .ambient-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+        }
+
+        .terminal {
+            width: 440px;
             background: #000;
             border: 1px solid #1a1a1a;
-            border-radius: 16px;
+            border-radius: 12px;
+            padding: 40px;
             text-align: center;
-            box-shadow: 0 0 80px rgba(255, 255, 255, 0.02);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
             position: relative;
+            z-index: 10;
+            transition: border-color 0.3s ease;
         }
 
-        .status-header {
-            font-size: 0.65rem;
-            letter-spacing: 4px;
-            color: #333;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        /* Invisible text hidden on background - Select to view */
-        .ghost-data {
-            color: #000;
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 0.7rem;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-            user-select: text;
+            letter-spacing: 2px;
+            color: #444;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #111;
+            padding-bottom: 12px;
         }
 
-        .ghost-data::selection {
+        .level-indicator {
+            color: #888;
+            font-weight: 700;
+        }
+
+        /* Clue Area */
+        .clue-container {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .clue-text {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        /* Invisible text trick */
+        .ghost-clue {
+            color: #000;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            user-select: text;
+            transition: color 0.3s ease;
+        }
+
+        .ghost-clue::selection {
             background: #fff;
             color: #000;
         }
 
-        .input-stack {
+        /* Input Controls */
+        .input-group {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-bottom: 30px;
         }
 
-        input {
+        input[type="text"] {
             width: 100%;
             background: #050505;
             border: 1px solid #1c1c1c;
@@ -77,11 +115,11 @@
             letter-spacing: 3px;
             text-align: center;
             outline: none;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
             text-transform: uppercase;
         }
 
-        input:focus {
+        input[type="text"]:focus {
             border-color: #555;
             background: #0a0a0a;
         }
@@ -96,7 +134,7 @@
             font-family: inherit;
             font-size: 0.75rem;
             font-weight: 700;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             text-transform: uppercase;
             cursor: pointer;
             transition: transform 0.2s, background 0.2s;
@@ -107,48 +145,34 @@
             transform: translateY(-1px);
         }
 
-        /* Shaking on failure */
-        .denied {
-            animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        /* Shake Animation on Wrong Answer */
+        .shake {
+            animation: shakeAnim 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
             border-color: #444 !important;
         }
 
-        @keyframes shake {
+        @keyframes shakeAnim {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Mysterious Corner Beacon */
-        .beacon {
+        /* Morse Beacon Dot (Top-Left) */
+        .morse-beacon {
             position: fixed;
             top: 24px;
             left: 24px;
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
             background: #fff;
             border-radius: 50%;
             opacity: 0;
-            animation: pulseSignal 5.5s infinite;
-        }
-
-        /* Reversed SOS Timing Pattern */
-        @keyframes pulseSignal {
-            0%, 100% { opacity: 0; }
-            2% { opacity: 1; } 4% { opacity: 0; }
-            6% { opacity: 1; } 8% { opacity: 0; }
-            10% { opacity: 1; } 12% { opacity: 0; }
-            18% { opacity: 1; } 24% { opacity: 0; }
-            28% { opacity: 1; } 34% { opacity: 0; }
-            38% { opacity: 1; } 44% { opacity: 0; }
-            50% { opacity: 1; } 52% { opacity: 0; }
-            54% { opacity: 1; } 56% { opacity: 0; }
-            58% { opacity: 1; } 60% { opacity: 0; }
+            transition: opacity 0.05s ease;
         }
 
         /* Completion Screen */
-        #resolved {
+        #completion-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -163,71 +187,163 @@
             opacity: 0;
             pointer-events: none;
             transition: opacity 1.2s ease;
+            z-index: 100;
         }
 
-        #resolved.active {
+        #completion-screen.active {
             opacity: 1;
             pointer-events: all;
         }
 
-        #resolved h1 {
-            font-size: 2.5rem;
+        #completion-screen h1 {
+            font-size: 3rem;
             letter-spacing: -1px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        #resolved a {
+        #completion-screen a {
             color: #000;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             letter-spacing: 2px;
+            font-weight: bold;
             text-decoration: underline;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div class="beacon"></div>
+    <div class="ambient-glow"></div>
+    <div class="morse-beacon" id="beacon"></div>
 
-    <div class="chamber" id="chamber-card" data-vault="S1VOTA==">
-        <div class="status-header">Chamber Lockdown // 0x3F</div>
-        
-        <div class="ghost-data">Z - X - Q</div>
-
-        <div class="input-stack">
-            <input type="text" id="seq1" placeholder="• • •" maxlength="4" autocomplete="off">
-            <input type="text" id="seq2" placeholder="• • •" maxlength="4" autocomplete="off">
-            <input type="text" id="seq3" placeholder="• • •" maxlength="4" autocomplete="off">
+    <!-- Hidden DOM Attribute for Level 2 -->
+    <div class="terminal" id="terminal" data-hash="S0VZQk9BUkQ=">
+        <div class="terminal-header">
+            <span>SECURITY_LEVEL</span>
+            <span class="level-indicator" id="level-num">STAGE 01 / 15</span>
         </div>
 
-        <button onclick="evaluateLock()">Authenticate</button>
+        <div class="clue-container">
+            <div class="clue-text" id="clue-display">Observe the light in the top-left...</div>
+            <div class="ghost-clue" id="ghost-display"></div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="pass-input" placeholder="ENTER KEY" autocomplete="off" maxlength="12">
+            <button onclick="submitKey()">AUTHENTICATE</button>
+        </div>
     </div>
 
-    <div id="resolved">
-        <h1>ACCESS GRANTED</h1>
-        <a href="#" id="target-link" target="_blank">CONTINUE TO DESTINATION</a>
+    <!-- Level 8 Hidden Comment Clue -->
+    <!-- Level 8 Clue: ==gSDFVT -->
+
+    <!-- Victory Screen -->
+    <div id="completion-screen">
+        <h1>CHALLENGE CLEARED</h1>
+        <p>You have overcome all 15 security locks.</p>
+        <a href="https://promos.discord.gg/Fv3yb6ZAYYqyhwRxKHXEXZ3m" target="_blank">CLAIM REWARD</a>
     </div>
 
     <script>
-        const KEY_1 = "53";
-        const KEY_2 = "JTLZ";
-        const KEY_3 = "28";
+        // --- 15 STAGE DATA ENGINE ---
+        const STAGES = [
+            { id: 1,  ans: "ROD",      clue: "Observe the light beacon timing.", ghost: "" },
+            { id: 2,  ans: "KEYBOARD", clue: "Inspect the terminal properties.", ghost: "" },
+            { id: 3,  ans: "CANCER",   clue: "Look into the empty space.", ghost: "Shift -2: EQPEI" },
+            { id: 4,  ans: "@AT",      clue: "Check the window title bar.", ghost: "" },
+            { id: 5,  ans: "9",         clue: "Calculate standard tile points.", ghost: "K - I - N - G" },
+            { id: 6,  ans: "5",         clue: "Inspect the URL hash parameter.", ghost: "" },
+            { id: 7,  ans: "T3A3",     clue: "Atbash Inversion:", ghost: "G3Z3" },
+            { id: 8,  ans: "MINT",     clue: "Inspect raw source comments.", ghost: "" },
+            { id: 9,  ans: "77",       clue: "Open the Browser Developer Console.", ghost: "" },
+            { id: 10, ans: "TREI",     clue: "ASCII Decimal Array:", ghost: "74 72 65 105" },
+            { id: 11, ans: "ASDFGH",   clue: "QWERTY row offset (+1 down):", ghost: "QWERTY" },
+            { id: 12, ans: "48",       clue: "Evaluate matrix equation:", ghost: "X = (15 * 4) - 12" },
+            { id: 13, ans: "ATTACK",   clue: "Vigenère Cipher (Key: LEMON):", ghost: "LXFOPVE" },
+            { id: 14, ans: "AAAA",     clue: "Audio Frequencies (Hz):", ghost: "440Hz, 880Hz, 220Hz" },
+            { id: 15, ans: "DISCORD",  clue: "Master Password Verification:", ghost: "Key: Discord Promo Target" }
+        ];
 
-        function evaluateLock() {
-            const v1 = document.getElementById("seq1").value.trim();
-            const v2 = document.getElementById("seq2").value.trim().toUpperCase();
-            const v3 = document.getElementById("seq3").value.trim();
+        let currentStage = 0;
 
-            const card = document.getElementById("chamber-card");
+        const beacon = document.getElementById("beacon");
+        const clueDisplay = document.getElementById("clue-display");
+        const ghostDisplay = document.getElementById("ghost-display");
+        const levelNum = document.getElementById("level-num");
+        const passInput = document.getElementById("pass-input");
+        const terminal = document.getElementById("terminal");
 
-            if (v1 === KEY_1 && v2 === KEY_2 && v3 === KEY_3) {
-                document.getElementById("resolved").classList.add("active");
+        // --- ACCURATE MORSE TIMING BEACON SYSTEM ---
+        // Dot (.) = 200ms, Dash (-) = 600ms, Gap = 200ms
+        // Stage 1 Sequence: R (.-.) O (---) D (-..)
+        const morsePattern = [
+            200, 200, 600, 200, 200, 600, // R: . - .
+            600, 200, 600, 200, 600, 600, // O: - - -
+            600, 200, 200, 200, 200, 2000 // D: - . .
+        ];
+        
+        let morseIdx = 0;
+        function runMorseBeacon() {
+            if (currentStage === 0) {
+                const isPulse = morseIdx % 2 === 0;
+                beacon.style.opacity = isPulse ? "1" : "0";
+                const delay = morsePattern[morseIdx];
+                morseIdx = (morseIdx + 1) % morsePattern.length;
+                setTimeout(runMorseBeacon, delay);
             } else {
-                card.classList.add("denied");
-                setTimeout(() => {
-                    card.classList.remove("denied");
-                }, 400);
+                beacon.style.opacity = "0";
             }
         }
+        runMorseBeacon();
+
+        // Stage 4 Title Updates
+        setInterval(() => {
+            if (currentStage === 3) {
+                document.title = "[40 41 54]";
+            } else {
+                document.title = "THE 15th CHAMBER";
+            }
+        }, 1000);
+
+        // Stage 6 URL Hash Setter
+        window.location.hash = "0101";
+
+        // Stage 9 Console Message
+        console.log("%c[SECURITY PROTOCOL LOG]", "color: #fff; font-weight: bold;");
+        console.log("Level 9 Clue: Sum of all prime numbers between 1 and 20.");
+
+        function renderStage() {
+            const stage = STAGES[currentStage];
+            levelNum.innerText = `STAGE ${stage.id.toString().padStart(2, '0')} / 15`;
+            clueDisplay.innerText = stage.clue;
+            ghostDisplay.innerText = stage.ghost;
+            passInput.value = "";
+        }
+
+        function submitKey() {
+            const userInput = passInput.value.trim().toUpperCase();
+            const correctKey = STAGES[currentStage].ans.toUpperCase();
+
+            if (userInput === correctKey) {
+                currentStage++;
+                if (currentStage >= STAGES.length) {
+                    document.getElementById("completion-screen").classList.add("active");
+                } else {
+                    renderStage();
+                }
+            } else {
+                terminal.classList.add("shake");
+                setTimeout(() => terminal.classList.remove("shake"), 400);
+            }
+        }
+
+        // Allow pressing 'Enter' to submit
+        passInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") submitKey();
+        });
+
+        // Initialize Stage 1
+        renderStage();
     </script>
 </body>
 </html>
