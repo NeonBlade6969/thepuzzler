@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL // CIPHER CHALLENGE</title>
+    <title>///</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&display=swap');
 
         * {
             box-sizing: border-box;
@@ -16,8 +16,8 @@
         body, html {
             width: 100%;
             height: 100%;
-            background-color: #050505;
-            color: #e0e0e0;
+            background-color: #000;
+            color: #fff;
             font-family: 'JetBrains Mono', monospace;
             display: flex;
             justify-content: center;
@@ -25,240 +25,209 @@
             overflow: hidden;
         }
 
-        .container {
-            width: 90%;
-            max-width: 700px;
-            background: #0d0d0d;
-            border: 1px solid #222;
-            border-radius: 8px;
+        .chamber {
+            width: 420px;
             padding: 40px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            background: #000;
+            border: 1px solid #1a1a1a;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(255, 255, 255, 0.02);
             position: relative;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #222;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        .level-title {
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            color: #666;
+        .status-header {
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            color: #333;
+            margin-bottom: 40px;
             text-transform: uppercase;
         }
 
-        .status {
-            font-size: 0.8rem;
-            color: #00ff66;
-        }
-
-        .prompt-area {
-            min-height: 140px;
+        /* Invisible text hidden on background - Select to view */
+        .ghost-data {
+            color: #000;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
             margin-bottom: 25px;
+            user-select: text;
         }
 
-        .clue-box {
-            background: #121212;
-            border-left: 3px solid #fff;
-            padding: 15px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            word-break: break-all;
+        .ghost-data::selection {
+            background: #fff;
+            color: #000;
         }
 
-        .hint-text {
-            font-size: 0.75rem;
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .input-group {
+        .input-stack {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        input[type="text"] {
-            flex: 1;
-            background: #000;
-            border: 1px solid #333;
+        input {
+            width: 100%;
+            background: #050505;
+            border: 1px solid #1c1c1c;
+            border-radius: 8px;
+            padding: 14px;
             color: #fff;
-            padding: 12px 15px;
             font-family: inherit;
-            font-size: 0.9rem;
-            border-radius: 4px;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-align: center;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-transform: uppercase;
         }
 
-        input[type="text"]:focus {
-            border-color: #666;
+        input:focus {
+            border-color: #555;
+            background: #0a0a0a;
         }
 
         button {
+            width: 100%;
             background: #fff;
             color: #000;
             border: none;
-            padding: 0 20px;
+            border-radius: 8px;
+            padding: 14px;
             font-family: inherit;
-            font-weight: 500;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background 0.2s;
+            transition: transform 0.2s, background 0.2s;
         }
 
         button:hover {
-            background: #ccc;
+            background: #e6e6e6;
+            transform: translateY(-1px);
         }
 
-        .shake {
-            animation: shake 0.3s ease-in-out;
-            border-color: #ff3333 !important;
+        /* Shaking on failure */
+        .denied {
+            animation: shake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            border-color: #444 !important;
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        #reward-screen {
-            display: none;
-            text-align: center;
+        /* Mysterious Corner Beacon */
+        .beacon {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulseSignal 5.5s infinite;
         }
 
-        #reward-screen h2 {
-            font-size: 1.5rem;
+        /* Reversed SOS Timing Pattern */
+        @keyframes pulseSignal {
+            0%, 100% { opacity: 0; }
+            2% { opacity: 1; } 4% { opacity: 0; }
+            6% { opacity: 1; } 8% { opacity: 0; }
+            10% { opacity: 1; } 12% { opacity: 0; }
+            18% { opacity: 1; } 24% { opacity: 0; }
+            28% { opacity: 1; } 34% { opacity: 0; }
+            38% { opacity: 1; } 44% { opacity: 0; }
+            50% { opacity: 1; } 52% { opacity: 0; }
+            54% { opacity: 1; } 56% { opacity: 0; }
+            58% { opacity: 1; } 60% { opacity: 0; }
+        }
+
+        /* Completion Screen */
+        #resolved {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #fff;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s ease;
+        }
+
+        #resolved.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #resolved h1 {
+            font-size: 2.5rem;
+            letter-spacing: -1px;
             margin-bottom: 15px;
-            color: #fff;
         }
 
-        #reward-screen a {
-            color: #00ff66;
+        #resolved a {
+            color: #000;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
             text-decoration: underline;
-            word-break: break-all;
-            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="game-box">
-        <div class="header">
-            <span class="level-title" id="level-indicator">Level 1 / 5</span>
-            <span class="status">SYSTEM_ACTIVE</span>
+    <div class="beacon"></div>
+
+    <div class="chamber" id="chamber-card" data-vault="S1VOTA==">
+        <div class="status-header">Chamber Lockdown // 0x3F</div>
+        
+        <div class="ghost-data">Z - X - Q</div>
+
+        <div class="input-stack">
+            <input type="text" id="seq1" placeholder="• • •" maxlength="4" autocomplete="off">
+            <input type="text" id="seq2" placeholder="• • •" maxlength="4" autocomplete="off">
+            <input type="text" id="seq3" placeholder="• • •" maxlength="4" autocomplete="off">
         </div>
 
-        <div id="puzzle-screen">
-            <div class="prompt-area">
-                <div class="clue-box" id="clue-display">Loading level...</div>
-                <div class="hint-text" id="hint-display">Analysing output stream...</div>
-            </div>
+        <button onclick="evaluateLock()">Authenticate</button>
+    </div>
 
-            <div class="input-group">
-                <input type="text" id="answer-input" placeholder="Enter key..." autocomplete="off">
-                <button onclick="submitAnswer()">SUBMIT</button>
-            </div>
-        </div>
-
-        <div id="reward-screen">
-            <h2>CHALLENGE COMPLETE</h2>
-            <p style="margin-bottom: 20px; color: #888;">All 5 verification locks passed.</p>
-            <p>Access Key / Resource:</p>
-            <p style="margin-top: 10px;"><a href="#" id="reward-link">https://example.com/completion-reward</a></p>
-        </div>
+    <div id="resolved">
+        <h1>ACCESS GRANTED</h1>
+        <a href="#" id="target-link" target="_blank">CONTINUE TO DESTINATION</a>
     </div>
 
     <script>
-        // Puzzle Data Structure
-        const levels = [
-            {
-                // Level 1: Reversed Morse Code -> "SIGNAL"
-                // Standard Morse for SIGNAL: ... .. --. -. .- .-..
-                // Reversed character sequence: .- ..-. -. --. .. ...
-                clue: ".- ..-. -. --. .. ...",
-                hint: "Instruction: Morse sequence detected in reverse transmission direction. Reverse the symbols before decoding.",
-                answer: "SIGNAL"
-            },
-            {
-                // Level 2: Reversed Morse decoded to "CODE", then Caesar Shift +3 -> "FRGH"
-                clue: "..-. .-. --. ....",
-                hint: "Instruction: Decoded string must undergo a Caesar Cipher shift of -3 to reveal the true keyword.",
-                answer: "CODE"
-            },
-            {
-                // Level 3: Base64 Encoded Text -> "SYSTEM" (Base64: U1lTVEVN)
-                clue: "U1lTVEVN",
-                hint: "Instruction: Standard 64-bit alphabet encoding detected.",
-                answer: "SYSTEM"
-            },
-            {
-                // Level 4: Scrabble Tile Value Sum
-                // Word: "PUZZLE" -> P(3) + U(1) + Z(10) + Z(10) + L(1) + E(1) = 26
-                clue: "P - U - Z - Z - L - E",
-                hint: "Instruction: Calculate total numerical value using standard Scrabble tile point distribution.",
-                answer: "26"
-            },
-            {
-                // Level 5: Combined (Base64 of "LOCK" -> TE9DSw==, then Reversed -> ==wSDOT")
-                clue: "==wSDOT",
-                hint: "Instruction: Double-layer obfuscation. Reverse the string, then decode Base64.",
-                answer: "LOCK"
-            }
-        ];
+        const KEY_1 = "53";
+        const KEY_2 = "JTLZ";
+        const KEY_3 = "28";
 
-        let currentLevel = 0;
+        function evaluateLock() {
+            const v1 = document.getElementById("seq1").value.trim();
+            const v2 = document.getElementById("seq2").value.trim().toUpperCase();
+            const v3 = document.getElementById("seq3").value.trim();
 
-        function loadLevel() {
-            if (currentLevel >= levels.length) {
-                showReward();
-                return;
-            }
+            const card = document.getElementById("chamber-card");
 
-            document.getElementById("level-indicator").innerText = `Level ${currentLevel + 1} / ${levels.length}`;
-            document.getElementById("clue-display").innerText = levels[currentLevel].clue;
-            document.getElementById("hint-display").innerText = levels[currentLevel].hint;
-            document.getElementById("answer-input").value = "";
-        }
-
-        function submitAnswer() {
-            const inputField = document.getElementById("answer-input");
-            const userAnswer = inputField.value.trim().toUpperCase();
-            const correctAnswer = levels[currentLevel].answer.toUpperCase();
-
-            if (userAnswer === correctAnswer) {
-                currentLevel++;
-                loadLevel();
+            if (v1 === KEY_1 && v2 === KEY_2 && v3 === KEY_3) {
+                document.getElementById("resolved").classList.add("active");
             } else {
-                inputField.classList.add("shake");
+                card.classList.add("denied");
                 setTimeout(() => {
-                    inputField.classList.remove("shake");
-                }, 300);
+                    card.classList.remove("denied");
+                }, 400);
             }
         }
-
-        function showReward() {
-            document.getElementById("puzzle-screen").style.display = "none";
-            document.getElementById("level-indicator").innerText = "COMPLETE";
-            document.getElementById("reward-screen").style.display = "block";
-        }
-
-        // Allow pressing Enter to submit
-        document.getElementById("answer-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                submitAnswer();
-            }
-        });
-
-        // Initialize Level 1
-        loadLevel();
     </script>
 </body>
 </html>
