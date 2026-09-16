@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are you watching closely?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: #0f0;
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* CRT Screen Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Glitch Title */
+        .glitch {
+            font-size: 3rem;
+            font-weight: bold;
+            position: relative;
+            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            animation: glitch 500ms infinite;
+        }
+
+        .glitch span {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
+            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
+            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
+            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
+        }
+
+        /* Loading Text Animation */
+        #loading-text {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+
+        #dots {
+            display: inline-block;
+            width: 80px;
+            text-align: left;
+        }
+
+        /* Invisible Clue */
+        .invisible-clue {
+            color: #050505; /* Same as background */
+            margin-top: 50px;
+            font-size: 0.9rem;
+            user-select: text; /* Allow highlighting */
+            cursor: text;
+        }
+
+        .invisible-clue::selection {
+            background-color: #0f0;
+            color: #000;
+        }
+
+        /* Terminal Input */
+        #terminal {
+            margin-top: 60px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        #prompt {
+            margin-right: 10px;
+            color: #555;
+        }
+
+        #input-display {
+            min-width: 20px;
+            letter-spacing: 5px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 12px;
+            height: 24px;
+            background-color: #0f0;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Shake animation for wrong answer */
+        .shake {
+            animation: shake 0.4s;
+            color: red !important;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* Matrix Canvas */
+        #matrix-canvas {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 100;
+            background: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div class="glitch" data-text="SYSTEM_LOCKED">SYSTEM_LOCKED</div>
+        
+        <div id="loading-text">
+            Decrypting Node <span id="dots">. . .</span>
+        </div>
+
+        <div id="terminal">
+            <span id="prompt">root@system:~$</span>
+            <span id="input-display"></span>
+            <span class="cursor"></span>
+        </div>
+
+        <!-- HIDDEN CLUE: Highlight to reveal -->
+        <div class="invisible-clue">
+            Clue: Dash is one. Dot is zero. Base 2 translates to base 10.
+        </div>
+    </div>
+
+    <!-- Matrix Rain Canvas (Shows when solved) -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <script>
+        // Clue 1: Hidden Console Message
+        console.log("%cWARNING: UNAUTHORIZED ACCESS DETECTED", "color: red; font-size: 20px; font-weight: bold;");
+        console.log("The sequence has 4 parts. Watch the loading screen closely.");
+        console.log("Only those who speak the machine's native tongue can enter.");
+
+        // Clue 2: The Dots/Dashes Logic
+        // 101 (5), 010 (2), 111 (7), 001 (1) -> Answer is 5271
+        const sequences = [
+            "- . -",  // 5
+            ". - .",  // 2
+            "- - -",  // 7
+            ". . -"   // 1
+        ];
+
+        let seqIndex = 0;
+        const dotsElement = document.getElementById("dots");
+
+        // Animate the dots every 2.5 seconds
+        setInterval(() => {
+            dotsElement.innerText = sequences[seqIndex];
+            seqIndex = (seqIndex + 1) % sequences.length;
+        }, 2500);
+
+        // Clue 3: Dynamic Page Title
+        const titles = ["Are you watching closely?", "What do the dashes mean?", "_ _ _ _", "System locked"];
+        let titleIndex = 0;
+        setInterval(() => {
+            document.title = titles[titleIndex];
+            titleIndex = (titleIndex + 1) % titles.length;
+        }, 4000);
+
+        // Input Handling
+        let currentInput = "";
+        const CORRECT_ANSWER = "5271";
+        const inputDisplay = document.getElementById("input-display");
+        const terminal = document.getElementById("terminal");
+
+        document.addEventListener("keydown", (e) => {
+            // If Matrix is running, ignore input
+            if (document.getElementById("matrix-canvas").style.display === "block") return;
+
+            // Handle backspace
+            if (e.key === "Backspace") {
+                currentInput = currentInput.slice(0, -1);
+                inputDisplay.innerText = currentInput;
+                return;
+            }
+
+            // Handle Enter (Submit)
+            if (e.key === "Enter") {
+                checkAnswer();
+                return;
+            }
+
+            // Handle alphanumeric typing
+            if (e.key.length === 1 && currentInput.length < 10) {
+                currentInput += e.key;
+                inputDisplay.innerText = currentInput;
+            }
+        });
+
+        function checkAnswer() {
+            if (currentInput === CORRECT_ANSWER) {
+                triggerSuccess();
+            } else {
+                // Wrong answer animation
+                terminal.classList.add("shake");
+                setTimeout(() => {
+                    terminal.classList.remove("shake");
+                    currentInput = "";
+                    inputDisplay.innerText = "";
+                }, 400);
+            }
+        }
+
+        function triggerSuccess() {
+            document.getElementById("container").style.display = "none";
+            const canvas = document.getElementById("matrix-canvas");
+            canvas.style.display = "block";
+            startMatrix(canvas);
+        }
+
+        // CRAZY ANIMATION: Matrix Digital Rain
+        function startMatrix(canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+';
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const drops = [];
+
+            for (let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+                
+                // Overlay "ACCESS GRANTED" in the center
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 - 50, 400, 100);
+                ctx.fillStyle = '#0f0';
+                ctx.font = '40px Share Tech Mono, monospace';
+                ctx.textAlign = "center";
+                ctx.fillText("ACCESS GRANTED", canvas.width / 2, canvas.height / 2 + 15);
+            }
+
+            setInterval(draw, 33);
+        }
+    </script>
+</body>
+</html>
