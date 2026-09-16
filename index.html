@@ -3,312 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Are you watching closely?</title>
+    <title>$100,000 IMPOSSIBLE PUZZLE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
 
-        body, html {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
             background-color: #050505;
-            color: #0f0;
-            font-family: 'Share Tech Mono', monospace;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        /* CRT Screen Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-        }
-
-        #container {
+            color: #ffffff;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            z-index: 10;
-            position: relative;
+            overflow: hidden;
+            transition: background-color 1s ease;
         }
 
-        /* Glitch Title */
-        .glitch {
-            font-size: 3rem;
-            font-weight: bold;
-            position: relative;
-            text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.05em 0 rgba(0, 255, 0, 0.75), 0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
-            animation: glitch 500ms infinite;
-        }
-
-        .glitch span {
+        /* Top Right Morse Beacon */
+        #morse-beacon {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 40px;
+            right: 40px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #050505;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            transition: background-color 0.1s ease;
         }
 
-        @keyframes glitch {
-            0% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            14% { text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75), -0.05em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em 0.05em 0 rgba(0, 0, 255, 0.75); }
-            15% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            49% { text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75), 0.025em 0.025em 0 rgba(0, 255, 0, 0.75), -0.05em -0.05em 0 rgba(0, 0, 255, 0.75); }
-            50% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            99% { text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75), 0.05em 0 0 rgba(0, 255, 0, 0.75), 0 -0.05em 0 rgba(0, 0, 255, 0.75); }
-            100% { text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75), -0.025em -0.025em 0 rgba(0, 255, 0, 0.75), -0.025em -0.05em 0 rgba(0, 0, 255, 0.75); }
+        /* Main Container */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Loading Text Animation */
-        #loading-text {
+        h1 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+
+        /* Smooth Loader */
+        .loader-box {
             font-size: 1.5rem;
-            margin-top: 20px;
-            letter-spacing: 2px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            height: 30px;
+            color: #ffffff;
         }
 
         #dots {
             display: inline-block;
-            width: 80px;
-            text-align: left;
+            font-family: monospace;
+            letter-spacing: 6px;
+            font-weight: 700;
+            transition: opacity 0.2s ease;
         }
 
-        /* Invisible Clue */
-        .invisible-clue {
-            color: #050505; /* Same as background */
-            margin-top: 50px;
-            font-size: 0.9rem;
-            user-select: text; /* Allow highlighting */
-            cursor: text;
-        }
-
-        .invisible-clue::selection {
-            background-color: #0f0;
-            color: #000;
-        }
-
-        /* Terminal Input */
-        #terminal {
-            margin-top: 60px;
-            font-size: 1.5rem;
+        /* Stage Lock Indicators */
+        .stage-indicator {
             display: flex;
-            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
         }
 
-        #prompt {
-            margin-right: 10px;
-            color: #555;
+        .dot-stage {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid #ffffff;
+            background: transparent;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #input-display {
-            min-width: 20px;
-            letter-spacing: 5px;
+        .dot-stage.active {
+            background: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
         }
 
-        .cursor {
-            display: inline-block;
-            width: 12px;
-            height: 24px;
-            background-color: #0f0;
-            animation: blink 1s step-end infinite;
+        /* Input Form */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #333333;
+            padding: 12px 0;
+            font-size: 1.25rem;
+            color: #ffffff;
+            text-align: center;
+            outline: none;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: border-color 0.3s ease;
         }
 
-        /* Shake animation for wrong answer */
+        input:focus {
+            border-bottom-color: #ffffff;
+        }
+
+        /* Invisible Text Clue */
+        .hidden-clue {
+            color: #050505; /* Same as background */
+            font-size: 0.75rem;
+            margin-top: 30px;
+            user-select: text;
+            cursor: default;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+        }
+
+        .hidden-clue::selection {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Error Vibration Animation */
         .shake {
-            animation: shake 0.4s;
-            color: red !important;
+            animation: smoothShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
         }
 
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        @keyframes smoothShake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Matrix Canvas */
-        #matrix-canvas {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Victory Screen */
+        #victory-screen {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            background: #ffffff;
+            color: #000000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             z-index: 100;
-            background: black;
+            opacity: 0;
+            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #victory-screen h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 12px;
+            margin-bottom: 10px;
+        }
+
+        #victory-screen p {
+            font-size: 1rem;
+            letter-spacing: 4px;
+            color: #666666;
         }
     </style>
 </head>
 <body>
 
-    <div id="container">
-        <div class="glitch" data-text="SYSTEM_LOCKED">SYSTEM_LOCKED</div>
+    <!-- Morse Light Beacon in Top Right Corner -->
+    <div id="morse-beacon"></div>
+
+    <div class="container" id="main-container">
+        <h1>Challenge Lock System</h1>
         
-        <div id="loading-text">
-            Decrypting Node <span id="dots">. . .</span>
+        <div class="stage-indicator">
+            <div class="dot-stage active" id="stg-1"></div>
+            <div class="dot-stage" id="stg-2"></div>
+            <div class="dot-stage" id="stg-3"></div>
         </div>
 
-        <div id="terminal">
-            <span id="prompt">root@system:~$</span>
-            <span id="input-display"></span>
-            <span class="cursor"></span>
+        <div class="loader-box">
+            <span id="loader-label">SYNCING</span> <span id="dots">. . .</span>
         </div>
 
-        <!-- HIDDEN CLUE: Highlight to reveal -->
-        <div class="invisible-clue">
-            Clue: Dash is one. Dot is zero. Base 2 translates to base 10.
+        <div class="input-group">
+            <input type="text" id="passcode" placeholder="ENTER CODE" autocomplete="off" spellcheck="false" autofocus>
+        </div>
+
+        <!-- Hidden Clue (Highlight to see) -->
+        <div class="hidden-clue">
+            Caesar Shift -1 : QMBZ
         </div>
     </div>
 
-    <!-- Matrix Rain Canvas (Shows when solved) -->
-    <canvas id="matrix-canvas"></canvas>
+    <!-- Victory Screen -->
+    <div id="victory-screen">
+        <h2>CHALLENGE CLEARED</h2>
+        <p>YOU UNLOCKED THE VAULT</p>
+    </div>
 
     <script>
-        // Clue 1: Hidden Console Message
-        console.log("%cWARNING: UNAUTHORIZED ACCESS DETECTED", "color: red; font-size: 20px; font-weight: bold;");
-        console.log("The sequence has 4 parts. Watch the loading screen closely.");
-        console.log("Only those who speak the machine's native tongue can enter.");
+        // Console Clues
+        console.log("%c[SYSTEM INITIALIZED]", "color: #fff; font-weight: bold; font-size: 14px;");
+        console.log("Hint 1: Loading sequence uses Binary (- is 1, . is 0).");
+        console.log("Hint 2: Watch the top-right light beacon closely. It speaks in international code.");
 
-        // Clue 2: The Dots/Dashes Logic
-        // 101 (5), 010 (2), 111 (7), 001 (1) -> Answer is 5271
-        const sequences = [
-            "- . -",  // 5
-            ". - .",  // 2
-            "- - -",  // 7
-            ". . -"   // 1
+        // Stage 1 Binary Sequence (5 - 2 - 6 - 1)
+        const binarySequence = [
+            "— . —", // 101 = 5
+            ". — .", // 010 = 2
+            "— — .", // 110 = 6
+            ". . —"  // 001 = 1
         ];
-
         let seqIndex = 0;
         const dotsElement = document.getElementById("dots");
 
-        // Animate the dots every 2.5 seconds
         setInterval(() => {
-            dotsElement.innerText = sequences[seqIndex];
-            seqIndex = (seqIndex + 1) % sequences.length;
-        }, 2500);
+            dotsElement.style.opacity = '0';
+            setTimeout(() => {
+                dotsElement.innerText = binarySequence[seqIndex];
+                dotsElement.style.opacity = '1';
+                seqIndex = (seqIndex + 1) % binarySequence.length;
+            }, 200);
+        }, 2200);
 
-        // Clue 3: Dynamic Page Title
-        const titles = ["Are you watching closely?", "What do the dashes mean?", "_ _ _ _", "System locked"];
-        let titleIndex = 0;
-        setInterval(() => {
-            document.title = titles[titleIndex];
-            titleIndex = (titleIndex + 1) % titles.length;
-        }, 4000);
+        // Morse Code Transmitter for Beacon (SOS: ... --- ...)
+        const beacon = document.getElementById("morse-beacon");
+        const morsePattern = [
+            100, 100, 100, 100, 100, 300, // S (...)
+            300, 100, 300, 100, 300, 300, // O (---)
+            100, 100, 100, 100, 100, 1200 // S (...)
+        ];
+        let morseIdx = 0;
 
-        // Input Handling
-        let currentInput = "";
-        const CORRECT_ANSWER = "5271";
-        const inputDisplay = document.getElementById("input-display");
-        const terminal = document.getElementById("terminal");
-
-        document.addEventListener("keydown", (e) => {
-            // If Matrix is running, ignore input
-            if (document.getElementById("matrix-canvas").style.display === "block") return;
-
-            // Handle backspace
-            if (e.key === "Backspace") {
-                currentInput = currentInput.slice(0, -1);
-                inputDisplay.innerText = currentInput;
-                return;
+        function runMorse() {
+            const duration = morsePattern[morseIdx];
+            const isOn = morseIdx % 2 === 0;
+            beacon.style.backgroundColor = isOn ? "#ffffff" : "#050505";
+            if (isOn) {
+                beacon.style.boxShadow = "0 0 12px rgba(255, 255, 255, 0.9)";
+            } else {
+                beacon.style.boxShadow = "none";
             }
+            
+            morseIdx = (morseIdx + 1) % morsePattern.length;
+            setTimeout(runMorse, duration);
+        }
+        runMorse();
 
-            // Handle Enter (Submit)
+        // Puzzle Lock Logic
+        let currentStage = 1;
+        const answers = {
+            1: "5261",
+            2: "SOS",
+            3: "PLAY"
+        };
+
+        const input = document.getElementById("passcode");
+        const container = document.getElementById("main-container");
+
+        input.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
-                checkAnswer();
-                return;
-            }
-
-            // Handle alphanumeric typing
-            if (e.key.length === 1 && currentInput.length < 10) {
-                currentInput += e.key;
-                inputDisplay.innerText = currentInput;
+                const val = input.value.trim().toUpperCase();
+                
+                if (val === answers[currentStage]) {
+                    // Correct Step
+                    document.getElementById(`stg-${currentStage}`).classList.remove("active");
+                    currentStage++;
+                    
+                    if (currentStage > 3) {
+                        triggerVictory();
+                    } else {
+                        document.getElementById(`stg-${currentStage}`).classList.add("active");
+                        input.value = "";
+                        // Brief white flash on stage success
+                        document.body.style.backgroundColor = "#1a1a1a";
+                        setTimeout(() => document.body.style.backgroundColor = "#050505", 200);
+                    }
+                } else {
+                    // Wrong Answer: Smooth shake animation
+                    container.classList.add("shake");
+                    input.style.borderBottomColor = "#ff3333";
+                    setTimeout(() => {
+                        container.classList.remove("shake");
+                        input.style.borderBottomColor = "#333333";
+                        input.value = "";
+                    }, 500);
+                }
             }
         });
 
-        function checkAnswer() {
-            if (currentInput === CORRECT_ANSWER) {
-                triggerSuccess();
-            } else {
-                // Wrong answer animation
-                terminal.classList.add("shake");
-                setTimeout(() => {
-                    terminal.classList.remove("shake");
-                    currentInput = "";
-                    inputDisplay.innerText = "";
-                }, 400);
-            }
-        }
-
-        function triggerSuccess() {
-            document.getElementById("container").style.display = "none";
-            const canvas = document.getElementById("matrix-canvas");
-            canvas.style.display = "block";
-            startMatrix(canvas);
-        }
-
-        // CRAZY ANIMATION: Matrix Digital Rain
-        function startMatrix(canvas) {
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+';
-            const fontSize = 16;
-            const columns = canvas.width / fontSize;
-            const drops = [];
-
-            for (let x = 0; x < columns; x++) {
-                drops[x] = 1;
-            }
-
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = '#0F0';
-                ctx.font = fontSize + 'px monospace';
-
-                for (let i = 0; i < drops.length; i++) {
-                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-                
-                // Overlay "ACCESS GRANTED" in the center
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-                ctx.fillRect(canvas.width / 2 - 200, canvas.height / 2 - 50, 400, 100);
-                ctx.fillStyle = '#0f0';
-                ctx.font = '40px Share Tech Mono, monospace';
-                ctx.textAlign = "center";
-                ctx.fillText("ACCESS GRANTED", canvas.width / 2, canvas.height / 2 + 15);
-            }
-
-            setInterval(draw, 33);
+        function triggerVictory() {
+            const vic = document.getElementById("victory-screen");
+            vic.style.display = "flex";
+            setTimeout(() => {
+                vic.style.opacity = "1";
+            }, 50);
         }
     </script>
 </body>
