@@ -3,322 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$100,000 IMPOSSIBLE PUZZLE</title>
+    <title>TERMINAL // CIPHER CHALLENGE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
         }
 
-        body {
+        body, html {
+            width: 100%;
+            height: 100%;
             background-color: #050505;
-            color: #ffffff;
-            height: 100vh;
+            color: #e0e0e0;
+            font-family: 'JetBrains Mono', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            transition: background-color 1s ease;
         }
 
-        /* Top Right Morse Beacon */
-        #morse-beacon {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #050505;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            transition: background-color 0.1s ease;
-        }
-
-        /* Main Container */
         .container {
-            width: 100%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 700px;
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 8px;
             padding: 40px;
-            text-align: center;
-            animation: fadeIn 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        h1 {
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            color: #666666;
-            margin-bottom: 20px;
-        }
-
-        /* Smooth Loader */
-        .loader-box {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 4px;
-            margin-bottom: 40px;
-            height: 30px;
-            color: #ffffff;
-        }
-
-        #dots {
-            display: inline-block;
-            font-family: monospace;
-            letter-spacing: 6px;
-            font-weight: 700;
-            transition: opacity 0.2s ease;
-        }
-
-        /* Stage Lock Indicators */
-        .stage-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 40px;
-        }
-
-        .dot-stage {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            border: 1px solid #ffffff;
-            background: transparent;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .dot-stage.active {
-            background: #ffffff;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
-        }
-
-        /* Input Form */
-        .input-group {
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
             position: relative;
-            margin-bottom: 20px;
         }
 
-        input {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #333333;
-            padding: 12px 0;
-            font-size: 1.25rem;
-            color: #ffffff;
-            text-align: center;
-            outline: none;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus {
-            border-bottom-color: #ffffff;
-        }
-
-        /* Invisible Text Clue */
-        .hidden-clue {
-            color: #050505; /* Same as background */
-            font-size: 0.75rem;
-            margin-top: 30px;
-            user-select: text;
-            cursor: default;
-            letter-spacing: 2px;
-            transition: color 0.3s ease;
-        }
-
-        .hidden-clue::selection {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        /* Error Vibration Animation */
-        .shake {
-            animation: smoothShake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-        }
-
-        @keyframes smoothShake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); }
-            20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Victory Screen */
-        #victory-screen {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #ffffff;
-            color: #000000;
-            flex-direction: column;
-            justify-content: center;
+        .header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-bottom: 1px solid #222;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
 
-        #victory-screen h2 {
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: 12px;
+        .level-title {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .status {
+            font-size: 0.8rem;
+            color: #00ff66;
+        }
+
+        .prompt-area {
+            min-height: 140px;
+            margin-bottom: 25px;
+        }
+
+        .clue-box {
+            background: #121212;
+            border-left: 3px solid #fff;
+            padding: 15px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .hint-text {
+            font-size: 0.75rem;
+            color: #555;
             margin-bottom: 10px;
         }
 
-        #victory-screen p {
-            font-size: 1rem;
-            letter-spacing: 4px;
-            color: #666666;
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px 15px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #666;
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 0 20px;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #ccc;
+        }
+
+        .shake {
+            animation: shake 0.3s ease-in-out;
+            border-color: #ff3333 !important;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        #reward-screen {
+            display: none;
+            text-align: center;
+        }
+
+        #reward-screen h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        #reward-screen a {
+            color: #00ff66;
+            text-decoration: underline;
+            word-break: break-all;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Morse Light Beacon in Top Right Corner -->
-    <div id="morse-beacon"></div>
-
-    <div class="container" id="main-container">
-        <h1>Challenge Lock System</h1>
-        
-        <div class="stage-indicator">
-            <div class="dot-stage active" id="stg-1"></div>
-            <div class="dot-stage" id="stg-2"></div>
-            <div class="dot-stage" id="stg-3"></div>
+    <div class="container" id="game-box">
+        <div class="header">
+            <span class="level-title" id="level-indicator">Level 1 / 5</span>
+            <span class="status">SYSTEM_ACTIVE</span>
         </div>
 
-        <div class="loader-box">
-            <span id="loader-label">SYNCING</span> <span id="dots">. . .</span>
+        <div id="puzzle-screen">
+            <div class="prompt-area">
+                <div class="clue-box" id="clue-display">Loading level...</div>
+                <div class="hint-text" id="hint-display">Analysing output stream...</div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="answer-input" placeholder="Enter key..." autocomplete="off">
+                <button onclick="submitAnswer()">SUBMIT</button>
+            </div>
         </div>
 
-        <div class="input-group">
-            <input type="text" id="passcode" placeholder="ENTER CODE" autocomplete="off" spellcheck="false" autofocus>
+        <div id="reward-screen">
+            <h2>CHALLENGE COMPLETE</h2>
+            <p style="margin-bottom: 20px; color: #888;">All 5 verification locks passed.</p>
+            <p>Access Key / Resource:</p>
+            <p style="margin-top: 10px;"><a href="#" id="reward-link">https://example.com/completion-reward</a></p>
         </div>
-
-        <!-- Hidden Clue (Highlight to see) -->
-        <div class="hidden-clue">
-            Caesar Shift -1 : QMBZ
-        </div>
-    </div>
-
-    <!-- Victory Screen -->
-    <div id="victory-screen">
-        <h2>CHALLENGE CLEARED</h2>
-        <p>YOU UNLOCKED THE VAULT</p>
     </div>
 
     <script>
-        // Console Clues
-        console.log("%c[SYSTEM INITIALIZED]", "color: #fff; font-weight: bold; font-size: 14px;");
-        console.log("Hint 1: Loading sequence uses Binary (- is 1, . is 0).");
-        console.log("Hint 2: Watch the top-right light beacon closely. It speaks in international code.");
-
-        // Stage 1 Binary Sequence (5 - 2 - 6 - 1)
-        const binarySequence = [
-            "— . —", // 101 = 5
-            ". — .", // 010 = 2
-            "— — .", // 110 = 6
-            ". . —"  // 001 = 1
-        ];
-        let seqIndex = 0;
-        const dotsElement = document.getElementById("dots");
-
-        setInterval(() => {
-            dotsElement.style.opacity = '0';
-            setTimeout(() => {
-                dotsElement.innerText = binarySequence[seqIndex];
-                dotsElement.style.opacity = '1';
-                seqIndex = (seqIndex + 1) % binarySequence.length;
-            }, 200);
-        }, 2200);
-
-        // Morse Code Transmitter for Beacon (SOS: ... --- ...)
-        const beacon = document.getElementById("morse-beacon");
-        const morsePattern = [
-            100, 100, 100, 100, 100, 300, // S (...)
-            300, 100, 300, 100, 300, 300, // O (---)
-            100, 100, 100, 100, 100, 1200 // S (...)
-        ];
-        let morseIdx = 0;
-
-        function runMorse() {
-            const duration = morsePattern[morseIdx];
-            const isOn = morseIdx % 2 === 0;
-            beacon.style.backgroundColor = isOn ? "#ffffff" : "#050505";
-            if (isOn) {
-                beacon.style.boxShadow = "0 0 12px rgba(255, 255, 255, 0.9)";
-            } else {
-                beacon.style.boxShadow = "none";
+        // Puzzle Data Structure
+        const levels = [
+            {
+                // Level 1: Reversed Morse Code -> "SIGNAL"
+                // Standard Morse for SIGNAL: ... .. --. -. .- .-..
+                // Reversed character sequence: .- ..-. -. --. .. ...
+                clue: ".- ..-. -. --. .. ...",
+                hint: "Instruction: Morse sequence detected in reverse transmission direction. Reverse the symbols before decoding.",
+                answer: "SIGNAL"
+            },
+            {
+                // Level 2: Reversed Morse decoded to "CODE", then Caesar Shift +3 -> "FRGH"
+                clue: "..-. .-. --. ....",
+                hint: "Instruction: Decoded string must undergo a Caesar Cipher shift of -3 to reveal the true keyword.",
+                answer: "CODE"
+            },
+            {
+                // Level 3: Base64 Encoded Text -> "SYSTEM" (Base64: U1lTVEVN)
+                clue: "U1lTVEVN",
+                hint: "Instruction: Standard 64-bit alphabet encoding detected.",
+                answer: "SYSTEM"
+            },
+            {
+                // Level 4: Scrabble Tile Value Sum
+                // Word: "PUZZLE" -> P(3) + U(1) + Z(10) + Z(10) + L(1) + E(1) = 26
+                clue: "P - U - Z - Z - L - E",
+                hint: "Instruction: Calculate total numerical value using standard Scrabble tile point distribution.",
+                answer: "26"
+            },
+            {
+                // Level 5: Combined (Base64 of "LOCK" -> TE9DSw==, then Reversed -> ==wSDOT")
+                clue: "==wSDOT",
+                hint: "Instruction: Double-layer obfuscation. Reverse the string, then decode Base64.",
+                answer: "LOCK"
             }
-            
-            morseIdx = (morseIdx + 1) % morsePattern.length;
-            setTimeout(runMorse, duration);
+        ];
+
+        let currentLevel = 0;
+
+        function loadLevel() {
+            if (currentLevel >= levels.length) {
+                showReward();
+                return;
+            }
+
+            document.getElementById("level-indicator").innerText = `Level ${currentLevel + 1} / ${levels.length}`;
+            document.getElementById("clue-display").innerText = levels[currentLevel].clue;
+            document.getElementById("hint-display").innerText = levels[currentLevel].hint;
+            document.getElementById("answer-input").value = "";
         }
-        runMorse();
 
-        // Puzzle Lock Logic
-        let currentStage = 1;
-        const answers = {
-            1: "5261",
-            2: "SOS",
-            3: "PLAY"
-        };
+        function submitAnswer() {
+            const inputField = document.getElementById("answer-input");
+            const userAnswer = inputField.value.trim().toUpperCase();
+            const correctAnswer = levels[currentLevel].answer.toUpperCase();
 
-        const input = document.getElementById("passcode");
-        const container = document.getElementById("main-container");
+            if (userAnswer === correctAnswer) {
+                currentLevel++;
+                loadLevel();
+            } else {
+                inputField.classList.add("shake");
+                setTimeout(() => {
+                    inputField.classList.remove("shake");
+                }, 300);
+            }
+        }
 
-        input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                const val = input.value.trim().toUpperCase();
-                
-                if (val === answers[currentStage]) {
-                    // Correct Step
-                    document.getElementById(`stg-${currentStage}`).classList.remove("active");
-                    currentStage++;
-                    
-                    if (currentStage > 3) {
-                        triggerVictory();
-                    } else {
-                        document.getElementById(`stg-${currentStage}`).classList.add("active");
-                        input.value = "";
-                        // Brief white flash on stage success
-                        document.body.style.backgroundColor = "#1a1a1a";
-                        setTimeout(() => document.body.style.backgroundColor = "#050505", 200);
-                    }
-                } else {
-                    // Wrong Answer: Smooth shake animation
-                    container.classList.add("shake");
-                    input.style.borderBottomColor = "#ff3333";
-                    setTimeout(() => {
-                        container.classList.remove("shake");
-                        input.style.borderBottomColor = "#333333";
-                        input.value = "";
-                    }, 500);
-                }
+        function showReward() {
+            document.getElementById("puzzle-screen").style.display = "none";
+            document.getElementById("level-indicator").innerText = "COMPLETE";
+            document.getElementById("reward-screen").style.display = "block";
+        }
+
+        // Allow pressing Enter to submit
+        document.getElementById("answer-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                submitAnswer();
             }
         });
 
-        function triggerVictory() {
-            const vic = document.getElementById("victory-screen");
-            vic.style.display = "flex";
-            setTimeout(() => {
-                vic.style.opacity = "1";
-            }, 50);
-        }
+        // Initialize Level 1
+        loadLevel();
     </script>
 </body>
 </html>
