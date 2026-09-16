@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE 20th CHAMBER // ULTIMATE CHALLENGE</title>
+    <title>THE 25th CHAMBER // ULTIMATE CHALLENGE</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
 
@@ -11,6 +11,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            cursor: none !important;
         }
 
         body, html {
@@ -25,7 +26,19 @@
             overflow: hidden;
         }
 
-        /* Subtle Ambient Glow */
+        #custom-cursor {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+            transition: transform 0.05s ease-out;
+        }
+
         .ambient-glow {
             position: absolute;
             width: 600px;
@@ -34,7 +47,6 @@
             pointer-events: none;
         }
 
-        /* Top Action Bar */
         .top-bar {
             position: fixed;
             top: 20px;
@@ -53,7 +65,6 @@
             font-family: inherit;
             font-size: 0.75rem;
             letter-spacing: 1px;
-            cursor: pointer;
             transition: all 0.2s ease;
         }
 
@@ -63,9 +74,8 @@
             border-color: #444;
         }
 
-        /* Main Terminal Card */
         .terminal {
-            width: 460px;
+            width: 480px;
             background: #000;
             border: 1px solid #1a1a1a;
             border-radius: 12px;
@@ -95,14 +105,14 @@
             font-weight: 700;
         }
 
-        /* Clue Box Area */
         .clue-container {
-            min-height: 80px;
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             margin-bottom: 25px;
+            position: relative;
         }
 
         .clue-text {
@@ -112,7 +122,6 @@
             word-break: break-all;
         }
 
-        /* Invisible text highlight mechanics */
         .ghost-clue {
             color: #000;
             font-size: 0.75rem;
@@ -127,7 +136,6 @@
             color: #000;
         }
 
-        /* Input Group & Verification Button */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -167,7 +175,6 @@
             font-weight: 700;
             letter-spacing: 3px;
             text-transform: uppercase;
-            cursor: pointer;
             transition: transform 0.2s, background 0.2s;
         }
 
@@ -176,7 +183,6 @@
             transform: translateY(-1px);
         }
 
-        /* Shake animation on incorrect submission */
         .shake {
             animation: shakeAnim 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
             border-color: #555 !important;
@@ -189,7 +195,6 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Correct Answer Overlay Checkmark SVG Drawing Animation */
         .correct-overlay {
             position: absolute;
             top: 0;
@@ -236,15 +241,9 @@
             animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.3s forwards;
         }
 
-        @keyframes strokeCircle {
-            100% { stroke-dashoffset: 0; }
-        }
+        @keyframes strokeCircle { 100% { stroke-dashoffset: 0; } }
+        @keyframes strokeCheck { 100% { stroke-dashoffset: 0; } }
 
-        @keyframes strokeCheck {
-            100% { stroke-dashoffset: 0; }
-        }
-
-        /* Morse Beacon Light Indicator */
         .morse-beacon {
             position: fixed;
             top: 24px;
@@ -257,7 +256,6 @@
             transition: opacity 0.05s ease;
         }
 
-        /* Slide-Out Decryptor Drawer & Side Console */
         .drawer {
             position: fixed;
             top: 0;
@@ -275,23 +273,14 @@
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #decryptor-drawer {
-            right: 0;
-            transform: translateX(100%);
-        }
+        #decryptor-drawer { right: 0; transform: translateX(100%); }
+        #decryptor-drawer.open { transform: translateX(0); }
 
-        #decryptor-drawer.open {
-            transform: translateX(0);
-        }
+        #console-drawer { left: 0; transform: translateX(-100%); }
+        #console-drawer.open { transform: translateX(0); }
 
-        #console-drawer {
-            left: 0;
-            transform: translateX(-100%);
-        }
-
-        #console-drawer.open {
-            transform: translateX(0);
-        }
+        #leaderboard-drawer { left: 0; transform: translateX(-100%); }
+        #leaderboard-drawer.open { transform: translateX(0); }
 
         .drawer-title {
             font-size: 0.75rem;
@@ -320,7 +309,6 @@
             word-break: break-all;
         }
 
-        /* Console Log Drawer Container */
         .console-logs {
             flex: 1;
             background: #000;
@@ -341,17 +329,30 @@
             animation: fadeInLine 0.2s forwards;
         }
 
-        @keyframes fadeInLine {
-            to { opacity: 1; }
+        @keyframes fadeInLine { to { opacity: 1; } }
+
+        #start-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Completion Reward Screen */
+        .modal-box {
+            width: 380px;
+            background: #050505;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+
         #completion-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: #fff;
             color: #000;
             display: flex;
@@ -370,42 +371,138 @@
         }
 
         #completion-screen h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             letter-spacing: -1px;
             margin-bottom: 10px;
         }
 
-        #completion-screen a {
+        .scrabble-board {
+            display: grid;
+            grid-template-columns: repeat(4, 45px);
+            gap: 8px;
+            margin: 10px auto;
+        }
+
+        .scrabble-tile {
+            width: 45px;
+            height: 45px;
+            background: #e6c280;
             color: #000;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
             font-weight: bold;
-            text-decoration: underline;
-            margin-top: 15px;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            box-shadow: 0 4px 0 #b38f4d;
+            user-select: none;
+            position: relative;
+        }
+
+        .scrabble-tile .sub {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 0.5rem;
+        }
+
+        .scrabble-tile.selected {
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px #fff;
+            transform: translateY(-2px);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 40px);
+            gap: 10px;
+            margin: 15px auto;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .pipeline-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .pipe-node {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .constellation-svg {
+            width: 180px;
+            height: 120px;
+            background: #050505;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 0.8rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 5px;
+        }
+
+        .leaderboard-item span:last-child {
+            color: #00ff66;
         }
     </style>
 </head>
 <body>
 
+    <div id="custom-cursor"></div>
     <div class="ambient-glow"></div>
     <div class="morse-beacon" id="beacon"></div>
 
-    <!-- Top Action Toolbar -->
+    <div id="start-modal">
+        <div class="modal-box">
+            <h2 style="letter-spacing: 2px; margin-bottom: 15px;">AUTHENTICATE</h2>
+            <p style="font-size: 0.75rem; color: #666; margin-bottom: 20px;">ENTER YOUR IDENTIFIER TO ACCESS THE CHAMBERS</p>
+            <input type="text" id="player-name-input" placeholder="PLAYER NAME" maxlength="12">
+            <button class="submit-btn" style="margin-top: 15px;" onclick="startGame()">START SYSTEM</button>
+        </div>
+    </div>
+
     <div class="top-bar">
+        <button class="tool-btn" onclick="toggleLeaderboard()">Leaderboard</button>
         <button class="tool-btn" onclick="toggleConsole()">Console Log</button>
         <button class="tool-btn" onclick="toggleDecryptor()">Decryptor Tool</button>
     </div>
 
-    <!-- Main Game Window -->
     <div class="terminal" id="terminal" data-key="S0VZQk9BUkQ=">
         <div class="terminal-header">
             <span>CHAMBER_SYSTEM</span>
-            <span class="level-indicator" id="level-num">STAGE 01 / 20</span>
+            <span class="level-indicator" id="level-num">STAGE 01 / 25</span>
         </div>
 
-        <div class="clue-container">
+        <div class="clue-container" id="clue-container">
             <div class="clue-text" id="clue-display">Observe the light beacon timing...</div>
             <div class="ghost-clue" id="ghost-display"></div>
+            <div id="visual-area"></div>
         </div>
 
         <div class="input-group">
@@ -413,7 +510,6 @@
             <button class="submit-btn" onclick="submitKey()">AUTHENTICATE</button>
         </div>
 
-        <!-- Correct Checkmark Drawn Animation Overlay -->
         <div class="correct-overlay" id="correct-overlay">
             <svg class="checkmark-svg" viewBox="0 0 52 52">
                 <circle class="checkmark-circle" cx="26" cy="26" r="25"/>
@@ -422,7 +518,6 @@
         </div>
     </div>
 
-    <!-- Built-in Decryptor Drawer -->
     <div class="drawer" id="decryptor-drawer">
         <div class="drawer-title">Built-In Decryptor Tool</div>
         <select class="decoder-select" id="cipher-type" onchange="runDecryptor()">
@@ -440,42 +535,107 @@
         <div class="decoder-output" id="decoder-out">---</div>
     </div>
 
-    <!-- Side Console Window -->
     <div class="drawer" id="console-drawer">
         <div class="drawer-title">System Console</div>
         <div class="console-logs" id="console-logs"></div>
     </div>
 
-    <!-- Challenge Completion Screen -->
+    <div class="drawer" id="leaderboard-drawer">
+        <div class="drawer-title">Global Leaderboard</div>
+        <ul class="leaderboard-list" id="leaderboard-list"></ul>
+    </div>
+
     <div id="completion-screen">
         <h1>ALL CHAMBERS CLEARED</h1>
-        <p>You have successfully unlocked all 20 levels.</p>
+        <p id="completion-time-text">You have successfully unlocked all 25 levels.</p>
         <a href="https://promos.discord.gg/Fv3yb6ZAYYqyhwRxKHXEXZ3m" target="_blank">CLAIM REWARD LINK</a>
     </div>
 
     <script>
-        // 20 LEVEL PUZZLE DATA PIPELINE
+        const cursor = document.getElementById("custom-cursor");
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.left = e.clientX + "px";
+            cursor.style.top = e.clientY + "px";
+        });
+
+        let playerName = "";
+        let startTime = 0;
+        let selectedScrabbleLetters = [];
+
+        const defaultLeaderboard = [
+            { name: "CIPHER_GOD", time: 145 },
+            { name: "NEO", time: 182 },
+            { name: "ALAN_T", time: 210 },
+            { name: "NULL_PTR", time: 275 },
+            { name: "H4CK3R", time: 340 }
+        ];
+
+        function getLeaderboard() {
+            const stored = localStorage.getItem("global_leaderboard_25");
+            return stored ? JSON.parse(stored) : defaultLeaderboard;
+        }
+
+        function saveLeaderboard(lb) {
+            localStorage.setItem("global_leaderboard_25", JSON.stringify(lb));
+        }
+
+        function renderLeaderboard() {
+            const lb = getLeaderboard();
+            const listEl = document.getElementById("leaderboard-list");
+            listEl.innerHTML = "";
+            lb.sort((a, b) => a.time - b.time).forEach((entry, idx) => {
+                const li = document.createElement("li");
+                li.className = "leaderboard-item";
+                li.innerHTML = `<span>${idx + 1}. ${entry.name}</span><span>${entry.time}s</span>`;
+                listEl.appendChild(li);
+            });
+        }
+
+        function startGame() {
+            const input = document.getElementById("player-name-input").value.trim();
+            if (!input) return;
+            playerName = input.toUpperCase();
+            localStorage.setItem("chamber_player_name", playerName);
+            document.getElementById("start-modal").style.display = "none";
+            startTime = Date.now();
+            logToConsole(`PLAYER LOGGED IN: ${playerName}`);
+            renderStage();
+        }
+
+        window.addEventListener("load", () => {
+            const savedName = localStorage.getItem("chamber_player_name");
+            if (savedName) {
+                document.getElementById("player-name-input").value = savedName;
+            }
+            renderLeaderboard();
+        });
+
         const STAGES = [
-            { id: 1,  ans: "ROD",      clue: "Observe the light beacon timing.", ghost: "" },
-            { id: 2,  ans: "KEYBOARD", clue: "Check the terminal's DOM attributes.", ghost: "" },
-            { id: 3,  ans: "CANCER",   clue: "Look closely into the empty space.", ghost: "Shift -2: EQPEI" },
-            { id: 4,  ans: "@AT",      clue: "Check the active window title bar.", ghost: "" },
-            { id: 5,  ans: "9",         clue: "Calculate total Scrabble tile points.", ghost: "K - I - N - G" },
-            { id: 6,  ans: "5",         clue: "Inspect the URL hash parameter.", ghost: "" },
-            { id: 7,  ans: "T3A3",     clue: "Atbash Alphabet Inversion:", ghost: "G3Z3" },
-            { id: 8,  ans: "MINT",     clue: "Use the Decryptor: Reverse + Base64.", ghost: "==gSDFVT" },
-            { id: 9,  ans: "77",       clue: "Read the System Console Logs.", ghost: "" },
-            { id: 10, ans: "TREI",     clue: "Convert ASCII Decimals:", ghost: "74 72 65 105" },
-            { id: 11, ans: "ASDFGH",   clue: "Shift QWERTY row offset down by 1:", ghost: "QWERTY" },
-            { id: 12, ans: "48",       clue: "Solve the mathematical equation:", ghost: "X = (15 * 4) - 12" },
-            { id: 13, ans: "ATTACK",   clue: "Vigenère Cipher (Key: LEMON):", ghost: "LXFOPVE" },
-            { id: 14, ans: "AAAA",     clue: "Audio Note Frequencies (Hz):", ghost: "440Hz, 880Hz, 220Hz" },
-            { id: 15, ans: "DISCORD",  clue: "Master Target Cipher:", ghost: "Vigenère key: TARGET" },
-            { id: 16, ans: "10110",    clue: "Decimal 22 to 5-bit Binary:", ghost: "Base-10: 22" },
-            { id: 17, ans: "CIPHER",   clue: "Caesar Shift (-3):", ghost: "FLSKHU" },
-            { id: 18, ans: "SILENT",   clue: "Rearrange Anagram Tiles:", ghost: "L I S T E N" },
-            { id: 19, ans: "VECTOR",   clue: "Hexadecimal Array Conversion:", ghost: "56 45 43 54 4F 52" },
-            { id: 20, ans: "CHAMBER",  clue: "Final Master Key:", ghost: "Reverse: REBMAHC" }
+            { id: 1, ans: "ROD", clue: "Observe the light beacon timing.", ghost: "", visual: "none" },
+            { id: 2, ans: "KEYBOARD", clue: "Check the terminal's DOM attributes.", ghost: "", visual: "none" },
+            { id: 3, ans: "CANCER", clue: "Look closely into the empty space.", ghost: "Shift -2: EQPEI", visual: "none" },
+            { id: 4, ans: "@AT", clue: "Check the active window title bar.", ghost: "", visual: "none" },
+            { id: 5, ans: "9", clue: "Calculate total Scrabble tile points.", ghost: "K - I - N - G", visual: "none" },
+            { id: 6, ans: "5", clue: "Inspect the URL hash parameter.", ghost: "", visual: "none" },
+            { id: 7, ans: "T3A3", clue: "Atbash Alphabet Inversion:", ghost: "G3Z3", visual: "none" },
+            { id: 8, ans: "MINT", clue: "Use the Decryptor: Reverse + Base64.", ghost: "==gSDFVT", visual: "none" },
+            { id: 9, ans: "77", clue: "Read the System Console Logs.", ghost: "", visual: "none" },
+            { id: 10, ans: "TREI", clue: "Convert ASCII Decimals:", ghost: "74 72 65 105", visual: "none" },
+            { id: 11, ans: "ASDFGH", clue: "Shift QWERTY row offset down by 1:", ghost: "QWERTY", visual: "none" },
+            { id: 12, ans: "48", clue: "Solve the mathematical equation:", ghost: "X = (15 * 4) - 12", visual: "none" },
+            { id: 13, ans: "ATTACK", clue: "Vigenère Cipher (Key: LEMON):", ghost: "LXFOPVE", visual: "none" },
+            { id: 14, ans: "AAAA", clue: "Audio Note Frequencies (Hz):", ghost: "440Hz, 880Hz, 220Hz", visual: "none" },
+            { id: 15, ans: "DISCORD", clue: "Master Target Cipher:", ghost: "Vigenère key: TARGET", visual: "none" },
+            { id: 16, ans: "10110", clue: "Decimal 22 to 5-bit Binary:", ghost: "Base-10: 22", visual: "none" },
+            { id: 17, ans: "CIPHER", clue: "Caesar Shift (-3):", ghost: "FLSKHU", visual: "none" },
+            { id: 18, ans: "SILENT", clue: "Rearrange Anagram Tiles:", ghost: "L I S T E N", visual: "none" },
+            { id: 19, ans: "VECTOR", clue: "Hexadecimal Array Conversion:", ghost: "56 45 43 54 4F 52", visual: "none" },
+            { id: 20, ans: "CHAMBER", clue: "Final Master Key:", ghost: "Reverse: REBMAHC", visual: "none" },
+            { id: 21, ans: "MATRIX", clue: "Select letters on the interactive Scrabble board to spell highest point word:", ghost: "", visual: "scrabble" },
+            { id: 22, ans: "RGB", clue: "Click primary light mixing sequence (Red, Green, Blue):", ghost: "", visual: "colors" },
+            { id: 23, ans: "CYGNUS", clue: "Trace the constellation shape sequence:", ghost: "NNE -> E -> SE", visual: "constellation" },
+            { id: 24, ans: "FLOW", clue: "Direct the signal flow through the nodes:", ghost: "A -> B -> C -> D", visual: "pipeline" },
+            { id: 25, ans: "PARADOX", clue: "Visual Optical Illusion Pattern:", ghost: "Count inner vertices of impossible triangle x 3", visual: "illusion" }
         ];
 
         let currentStage = 0;
@@ -483,13 +643,13 @@
         const beacon = document.getElementById("beacon");
         const clueDisplay = document.getElementById("clue-display");
         const ghostDisplay = document.getElementById("ghost-display");
+        const visualArea = document.getElementById("visual-area");
         const levelNum = document.getElementById("level-num");
         const passInput = document.getElementById("pass-input");
         const terminal = document.getElementById("terminal");
         const overlay = document.getElementById("correct-overlay");
         const consoleLogs = document.getElementById("console-logs");
 
-        // System Console Logger Function
         function logToConsole(msg) {
             const line = document.createElement("div");
             line.className = "console-line";
@@ -498,15 +658,10 @@
             consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
 
-        logToConsole("SYSTEM INIT: 20 Chambers Online.");
+        logToConsole("SYSTEM INIT: 25 Chambers Online.");
         logToConsole("Level 9 Hint: Sum of prime numbers between 1 and 20.");
 
-        // Morse Code Timing Light System (Stage 1)
-        const morsePattern = [
-            200, 200, 600, 200, 200, 600, // R: . - .
-            600, 200, 600, 200, 600, 600, // O: - - -
-            600, 200, 200, 200, 200, 2000 // D: - . .
-        ];
+        const morsePattern = [200, 200, 600, 200, 200, 600, 600, 200, 600, 200, 600, 600, 600, 200, 200, 200, 200, 2000];
         let morseIdx = 0;
 
         function runMorseBeacon() {
@@ -522,40 +677,117 @@
         }
         runMorseBeacon();
 
-        // Stage 4 Window Title Bar Updates
         setInterval(() => {
             if (currentStage === 3) {
                 document.title = "[40 41 54]";
             } else {
-                document.title = "THE 20th CHAMBER";
+                document.title = "THE 25th CHAMBER";
             }
         }, 1000);
 
-        // Stage 6 URL Hash Setter
         window.location.hash = "0101";
 
         function renderStage() {
             const stage = STAGES[currentStage];
-            levelNum.innerText = `STAGE ${stage.id.toString().padStart(2, '0')} / 20`;
+            levelNum.innerText = `STAGE ${stage.id.toString().padStart(2, '0')} / 25`;
             clueDisplay.innerText = stage.clue;
             ghostDisplay.innerText = stage.ghost;
             passInput.value = "";
+            visualArea.innerHTML = "";
+            selectedScrabbleLetters = [];
+
+            if (stage.visual === "scrabble") {
+                const board = document.createElement("div");
+                board.className = "scrabble-board";
+                const letters = [
+                    {l:'M',p:3},{l:'A',p:1},{l:'T',p:1},{l:'R',p:1},
+                    {l:'I',p:1},{l:'X',p:8},{l:'E',p:1},{l:'S',p:1}
+                ];
+                letters.forEach(item => {
+                    const tile = document.createElement("div");
+                    tile.className = "scrabble-tile";
+                    tile.innerHTML = `${item.l}<span class="sub">${item.p}</span>`;
+                    tile.onclick = () => {
+                        tile.classList.toggle("selected");
+                        if (tile.classList.contains("selected")) {
+                            selectedScrabbleLetters.push(item.l);
+                        } else {
+                            selectedScrabbleLetters = selectedScrabbleLetters.filter(x => x !== item.l);
+                        }
+                        passInput.value = selectedScrabbleLetters.join("");
+                    };
+                    board.appendChild(tile);
+                });
+                visualArea.appendChild(board);
+            } else if (stage.visual === "colors") {
+                const grid = document.createElement("div");
+                grid.className = "color-grid";
+                const colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff"];
+                const names = ["R", "G", "B", "Y", "P", "C"];
+                colors.forEach((c, idx) => {
+                    const btn = document.createElement("div");
+                    btn.className = "color-btn";
+                    btn.style.background = c;
+                    btn.onclick = () => {
+                        passInput.value += names[idx];
+                    };
+                    grid.appendChild(btn);
+                });
+                visualArea.appendChild(grid);
+            } else if (stage.visual === "constellation") {
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("class", "constellation-svg");
+                svg.innerHTML = `
+                    <circle cx="30" cy="60" r="4" fill="#fff"/>
+                    <circle cx="70" cy="30" r="4" fill="#fff"/>
+                    <circle cx="110" cy="30" r="4" fill="#fff"/>
+                    <circle cx="150" cy="70" r="4" fill="#fff"/>
+                    <line x1="30" y1="60" x2="70" y2="30" stroke="#555" stroke-width="2"/>
+                    <line x1="70" y1="30" x2="110" y2="30" stroke="#555" stroke-width="2"/>
+                    <line x1="110" y1="30" x2="150" y2="70" stroke="#555" stroke-width="2"/>
+                `;
+                visualArea.appendChild(svg);
+            } else if (stage.visual === "pipeline") {
+                const pipe = document.createElement("div");
+                pipe.className = "pipeline-container";
+                ["F", "L", "O", "W"].forEach(char => {
+                    const node = document.createElement("div");
+                    node.className = "pipe-node";
+                    node.innerText = char;
+                    pipe.appendChild(node);
+                });
+                visualArea.appendChild(pipe);
+            } else if (stage.visual === "illusion") {
+                const div = document.createElement("div");
+                div.style.marginTop = "10px";
+                div.style.fontSize = "0.8rem";
+                div.style.color = "#888";
+                div.innerText = "▲ (3 vertices x 2 sides = 6, 6 x 3 = ? -> PARADOX)";
+                visualArea.appendChild(div);
+            }
+
             logToConsole(`Loaded Stage ${stage.id}.`);
         }
 
-        // Verification & Animated Checkmark Trigger
         function submitKey() {
             const userInput = passInput.value.trim().toUpperCase();
             const correctKey = STAGES[currentStage].ans.toUpperCase();
 
             if (userInput === correctKey) {
-                // Trigger Drawn Checkmark Animation Overlay
                 overlay.classList.add("active");
                 
                 setTimeout(() => {
                     overlay.classList.remove("active");
                     currentStage++;
                     if (currentStage >= STAGES.length) {
+                        const totalTime = Math.floor((Date.now() - startTime) / 1000);
+                        document.getElementById("completion-time-text").innerText = `Cleared all 25 levels in ${totalTime} seconds!`;
+                        
+                        const lb = getLeaderboard();
+                        lb.push({ name: playerName || "UNKNOWN", time: totalTime });
+                        saveLeaderboard(lb);
+                        renderLeaderboard();
+
                         document.getElementById("completion-screen").classList.add("active");
                     } else {
                         renderStage();
@@ -568,7 +800,6 @@
             }
         }
 
-        // Drawer Toggle Handlers
         function toggleDecryptor() {
             document.getElementById("decryptor-drawer").classList.toggle("open");
         }
@@ -577,7 +808,11 @@
             document.getElementById("console-drawer").classList.toggle("open");
         }
 
-        // Built-In Decryptor Logic Engine
+        function toggleLeaderboard() {
+            renderLeaderboard();
+            document.getElementById("leaderboard-drawer").classList.toggle("open");
+        }
+
         function runDecryptor() {
             const type = document.getElementById("cipher-type").value;
             const src = document.getElementById("decoder-src").value.trim();
@@ -619,9 +854,6 @@
         passInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter") submitKey();
         });
-
-        // Initialize First Level
-        renderStage();
     </script>
 </body>
 </html>
